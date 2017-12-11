@@ -1,0 +1,138 @@
+package com.checkers.client;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+public class GuiWelcome extends JFrame {
+
+    private JButton newGame;
+    private JButton joinGame;
+    private JButton info;
+    private JButton quit;
+    private JTextField gameName;
+    private JPanel bodyContainer;
+    private JPanel container;
+    private JLabel welcomeText;
+    private GridBagConstraints constraints;
+    private String popoutMessage;
+    private GuiHandler handler;
+
+
+    GuiWelcome(GuiHandler handler){
+
+        super("Welcome menu");
+        this.handler=handler;
+
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        popoutMessage = " Chinese Checkers \n Kacper Szatan i Piotr Borowczyk";
+
+        createComponents();
+        setContainer();
+        addComponents();
+        addListeners();
+
+        setSize(300, 400);
+        setLocation(400,400);
+
+    }
+
+
+
+    private void setContainer(){
+        add(container);
+        container.setBorder(new EmptyBorder(10,10,10,10));
+        container.setLayout(new GridBagLayout());
+
+        bodyContainer.setLayout(new GridBagLayout());
+
+    }
+
+    private void createComponents(){
+        container = new JPanel();
+        bodyContainer = new JPanel();
+        welcomeText = new JLabel("Chinese Checkers");
+        welcomeText.setFont(new Font("Comic Sans MS", Font.PLAIN | Font.BOLD, 30));
+        newGame = new JButton("New Game");
+        joinGame = new JButton("Join Game");
+        info = new JButton("Info");
+        quit = new JButton("Exit");
+        gameName = new JTextField();
+    }
+
+    private void addComponents(){
+
+        constraints = new GridBagConstraints();
+
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        constraints.anchor = GridBagConstraints.NORTH;
+        container.add(welcomeText,constraints);
+
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weighty = 1;
+
+        constraints.insets = new Insets(40,0,40,0);
+        container.add(bodyContainer,constraints);
+        constraints.insets= new Insets(0,0,0,0);
+
+        bodyContainer.add(newGame,constraints);
+        bodyContainer.add(joinGame,constraints);
+        bodyContainer.add(gameName,constraints);
+        bodyContainer.add(info,constraints);
+        bodyContainer.add(quit,constraints);
+
+
+    }
+
+    private void addListeners(){
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                GuiWelcome.this.setVisible(false);
+                GuiWelcome.this.dispose();
+            }
+        });
+
+        newGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handler.newGameSetup();
+            }
+        });
+
+        joinGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(! gameName.getText().equals("")){
+                    handler.joinGame();
+                    gameName.setText("Game joined ;--)");
+                }
+
+            }
+        });
+
+        info.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(GuiWelcome.this , popoutMessage,"Info",JOptionPane.PLAIN_MESSAGE);
+            }
+        });
+
+        quit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GuiWelcome.this.setVisible(false);
+                GuiWelcome.this.dispose();
+            }
+        });
+    }
+
+
+
+}
