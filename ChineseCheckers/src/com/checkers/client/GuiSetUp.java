@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class GuiSetUp extends JFrame{
+public class GuiSetup extends JFrame{
 
     private GuiHandler handler;
     private JTabbedPane tabbs;
@@ -18,7 +18,7 @@ public class GuiSetUp extends JFrame{
     private JPanel basics,extras,container;
     private JTextField gameNameTxt, playersTxt,piecesTxt,cornersTxt,cornerWidthTxt;
 
-    GuiSetUp(GuiHandler handler){
+    GuiSetup(GuiHandler handler){
 
         super("Setup menu");
         this.handler=handler;
@@ -26,15 +26,13 @@ public class GuiSetUp extends JFrame{
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         createComponents();
-
-
         addComponents();
         addListeners();
-
 
         setLocation(600,250);
         pack();
 
+        setResizable(false);
     }
 
     private void createComponents(){
@@ -58,7 +56,6 @@ public class GuiSetUp extends JFrame{
 
     private void addComponents(){
 
-
         basics.setLayout(new GridLayout(3,2));
         extras.setLayout(new GridLayout(3,2));
 
@@ -76,12 +73,20 @@ public class GuiSetUp extends JFrame{
         extras.add(cornerWidth);
         extras.add(cornerWidthTxt);
 
-
         add(container);
         container.setBorder(new EmptyBorder(5,5,5,5));
         container.add(tabbs);
         tabbs.addTab("Setup", null, basics, "Basic game setup");
         tabbs.addTab("Extras", null, extras, "Extra game options");
+
+        basics.setPreferredSize(new Dimension(300, 100));
+        container.setPreferredSize(new Dimension(350,150));
+    }
+
+    private String parseData(){
+        String tmp = gameNameTxt.getText()+";"+playersTxt.getText()+";"+
+                piecesTxt.getText()+";"+cornersTxt.getText()+";"+cornerWidthTxt.getText();
+        return tmp;
     }
 
     private void addListeners(){
@@ -89,15 +94,15 @@ public class GuiSetUp extends JFrame{
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                GuiSetUp.this.setVisible(false);
-                GuiSetUp.this.dispose();
+                GuiSetup.this.setVisible(false);
+                GuiSetup.this.dispose();
             }
         });
 
         create.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                handler.newGame();
+                handler.newGame(parseData());
             }
         });
 
@@ -114,7 +119,5 @@ public class GuiSetUp extends JFrame{
 
 
     }
-
-
 
 }

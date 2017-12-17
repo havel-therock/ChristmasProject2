@@ -14,12 +14,16 @@ public class GuiWelcome extends JFrame {
     private JButton joinGame;
     private JButton info;
     private JButton quit;
-    private JTextField gameName;
+    private JButton ip;
+    private JTextField gameText;
+    private JTextField ipText;
     private JPanel bodyContainer;
     private JPanel container;
-    private JLabel welcomeText;
+    private JLabel welcome;
     private GridBagConstraints constraints;
-    private String popoutMessage;
+    private String message;
+    private boolean isConnected;
+    
     private GuiHandler handler;
 
 
@@ -29,7 +33,8 @@ public class GuiWelcome extends JFrame {
         this.handler=handler;
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        popoutMessage = " Chinese Checkers \n Kacper Szatan i Piotr Borowczyk";
+        message = " Chinese Checkers \n Kacper Szatan i Piotr Borowczyk";
+        isConnected = false;
 
         createComponents();
         setContainer();
@@ -55,13 +60,15 @@ public class GuiWelcome extends JFrame {
     private void createComponents(){
         container = new JPanel();
         bodyContainer = new JPanel();
-        welcomeText = new JLabel("Chinese Checkers");
-        welcomeText.setFont(new Font("Comic Sans MS", Font.PLAIN | Font.BOLD, 30));
+        welcome = new JLabel("Chinese Checkers");
+        welcome.setFont(new Font("Comic Sans MS", Font.PLAIN | Font.BOLD, 30));
         newGame = new JButton("New Game");
         joinGame = new JButton("Join Game");
         info = new JButton("Info");
         quit = new JButton("Exit");
-        gameName = new JTextField();
+        ip = new JButton("Enter ip and press to connect:");
+        ipText = new JTextField("127.0.0.1");
+        gameText = new JTextField("");
     }
 
     private void addComponents(){
@@ -70,7 +77,7 @@ public class GuiWelcome extends JFrame {
 
         constraints.gridwidth = GridBagConstraints.REMAINDER;
         constraints.anchor = GridBagConstraints.NORTH;
-        container.add(welcomeText,constraints);
+        container.add(welcome,constraints);
 
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.fill = GridBagConstraints.BOTH;
@@ -80,9 +87,11 @@ public class GuiWelcome extends JFrame {
         container.add(bodyContainer,constraints);
         constraints.insets= new Insets(0,0,0,0);
 
+        bodyContainer.add(ip,constraints);
+        bodyContainer.add(ipText,constraints);
         bodyContainer.add(newGame,constraints);
         bodyContainer.add(joinGame,constraints);
-        bodyContainer.add(gameName,constraints);
+        bodyContainer.add(gameText,constraints);
         bodyContainer.add(info,constraints);
         bodyContainer.add(quit,constraints);
 
@@ -102,25 +111,25 @@ public class GuiWelcome extends JFrame {
         newGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                handler.newGameSetup();
+                if(isConnected) {
+                    handler.createGuiSetup();
+                }
             }
         });
 
         joinGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(! gameName.getText().equals("")){
-                    handler.joinGame();
-                    gameName.setText("Game joined ;--)");
+                if(isConnected) {
+                    handler.joinGame(gameText.getText());
                 }
-
             }
         });
 
         info.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(GuiWelcome.this , popoutMessage,"Info",JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(GuiWelcome.this , message,"Info",JOptionPane.PLAIN_MESSAGE);
             }
         });
 
@@ -131,6 +140,22 @@ public class GuiWelcome extends JFrame {
                 GuiWelcome.this.dispose();
             }
         });
+
+        ip.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!isConnected) {
+                    isConnected=handler.tryConnection(ipText.getText());
+                    if(isConnected) {
+                        ipText.setText("Connected");
+                    }
+                }
+            }
+        });
+    }
+
+    void showMessage(String message){
+        JOptionPane.showMessageDialog(GuiWelcome.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
     }
 
 

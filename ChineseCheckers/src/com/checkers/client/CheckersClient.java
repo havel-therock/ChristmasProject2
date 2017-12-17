@@ -11,23 +11,31 @@ public class CheckersClient {
     Socket socket;
     BufferedReader reader;
     PrintWriter writer;
+    GuiHandler handler;
 
     public static void main(String[] args){
         CheckersClient client = new CheckersClient();
-        client.connectServer();
-        GuiHandler handler = new GuiHandler();
+        client.createHandler();
     }
 
-    private void connectServer(){
+    private void createHandler(){
+        handler = new GuiHandler(this);
+    }
+
+
+    protected boolean connectServer(String hostName){
         try{
-            socket = new Socket("127.0.0.1", 4444);
+            socket = new Socket(hostName, 4444);
             InputStreamReader inStream = new InputStreamReader(socket.getInputStream());
             reader = new BufferedReader(inStream);
             writer = new PrintWriter(socket.getOutputStream());
+            return true;
         }catch(IOException e){
             e.printStackTrace();
             System.out.println("Failed while connecting server");
+            return false;
         }
 
     }
+
 }
