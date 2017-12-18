@@ -24,13 +24,13 @@ public class GuiWelcome extends JFrame {
     private String message;
     private boolean isConnected;
     
-    private GuiHandler handler;
+    private CheckersClient client;
 
 
-    GuiWelcome(GuiHandler handler){
+    GuiWelcome(CheckersClient client){
 
         super("Welcome menu");
-        this.handler=handler;
+        this.client=client;
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         message = " Chinese Checkers \n Kacper Szatan i Piotr Borowczyk";
@@ -104,7 +104,6 @@ public class GuiWelcome extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 GuiWelcome.this.setVisible(false);
-
                 GuiWelcome.this.dispose();
             }
         });
@@ -113,7 +112,7 @@ public class GuiWelcome extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(isConnected) {
-                    handler.createGuiSetup();
+                    client.getGuiHandler().createGuiSetup();
                 }
             }
         });
@@ -122,7 +121,7 @@ public class GuiWelcome extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(isConnected) {
-                    handler.joinGame(gameText.getText());
+                    client.joinGame(gameText.getText());
                 }
             }
         });
@@ -146,7 +145,7 @@ public class GuiWelcome extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(!isConnected) {
-                    isConnected=handler.tryConnection(ipText.getText());
+                    isConnected=client.connectServer(ipText.getText());
                     if(isConnected) {
                         ipText.setText("Connected");
                     }

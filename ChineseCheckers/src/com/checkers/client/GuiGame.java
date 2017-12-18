@@ -9,7 +9,7 @@ public class GuiGame extends JFrame {
 
     private JLabel example;
 
-    GuiGame (){
+    GuiGame (CheckersClient client){
         super("Game in progress");
 
         setPreferredSize(new Dimension(300,200));
@@ -24,15 +24,15 @@ public class GuiGame extends JFrame {
         pack();
     }
 
-    private void createComponents(){
+    void createComponents(){
         example = new JLabel("example");
     }
 
-    private void addComponents(){
+     void addComponents(){
         add(example);
     }
 
-    private void addListeners(){
+    void addListeners(){
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {

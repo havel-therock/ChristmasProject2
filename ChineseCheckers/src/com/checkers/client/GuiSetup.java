@@ -10,7 +10,7 @@ import java.awt.event.WindowEvent;
 
 public class GuiSetup extends JFrame{
 
-    private GuiHandler handler;
+    private CheckersClient client;
     private JTabbedPane tabbs;
     private JButton create;
     private JButton clear;
@@ -18,10 +18,10 @@ public class GuiSetup extends JFrame{
     private JPanel basics,extras,container;
     private JTextField gameNameTxt, playersTxt,piecesTxt,cornersTxt,cornerWidthTxt;
 
-    GuiSetup(GuiHandler handler){
+    GuiSetup(CheckersClient client){
 
         super("Setup menu");
-        this.handler=handler;
+        this.client=client;
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -102,7 +102,7 @@ public class GuiSetup extends JFrame{
         create.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                handler.newGame(parseData());
+                client.newGame(parseData());
             }
         });
 
