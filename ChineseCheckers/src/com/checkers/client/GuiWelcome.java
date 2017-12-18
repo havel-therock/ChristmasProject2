@@ -104,6 +104,7 @@ public class GuiWelcome extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 GuiWelcome.this.setVisible(false);
+
                 GuiWelcome.this.dispose();
             }
         });

@@ -17,8 +17,8 @@ class CheckersServer {
     }
 
     ServerSocket mainSocket;
-    ArrayList<Player> playersList = new ArrayList<Player>();
-    ArrayList<Game> gamesList = new ArrayList<Game>();
+    ArrayList<Runnable> playerList = new ArrayList<>();
+    ArrayList<Game> gameList = new ArrayList<Game>();
 
     void startServer() {
         try {
@@ -52,8 +52,11 @@ class CheckersServer {
             InputStreamReader reader_stream = new InputStreamReader(communicationSocket.getInputStream());
             BufferedReader reader = new BufferedReader(reader_stream);
             PrintWriter writer = new PrintWriter(communicationSocket.getOutputStream(), true);
-            Player player = new Player(reader,writer);
-            playersList.add(player);
+            Runnable player = new Player(reader,writer,gameList);
+            playerList.add(player);
+
+            Thread playerManagement = new Thread(player);
+            playerManagement.start();
         }catch(IOException e){
             e.printStackTrace();
             System.out.println("Server failed while creating player");

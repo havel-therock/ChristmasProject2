@@ -79,8 +79,8 @@ public class GuiSetup extends JFrame{
         tabbs.addTab("Setup", null, basics, "Basic game setup");
         tabbs.addTab("Extras", null, extras, "Extra game options");
 
-        basics.setPreferredSize(new Dimension(300, 100));
-        container.setPreferredSize(new Dimension(350,150));
+        basics.setPreferredSize(new Dimension(300, 150));
+        container.setPreferredSize(new Dimension(350,200));
     }
 
     private String parseData(){

@@ -87,7 +87,9 @@ public class GuiHandler {
         }
     }
 
-    private boolean newGameRequest(String data){                       // dummy method
+    private boolean newGameRequest(String data){
+            client.writer.println("newg;" + data);
+            client.writer.flush();
             return true;
     }
 

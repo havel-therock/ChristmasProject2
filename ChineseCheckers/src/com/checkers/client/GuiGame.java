@@ -38,6 +38,7 @@ public class GuiGame extends JFrame {
             public void windowClosing(WindowEvent e) {
                 GuiGame.this.setVisible(false);
                 GuiGame.this.dispose();
+
             }
         });
     }
