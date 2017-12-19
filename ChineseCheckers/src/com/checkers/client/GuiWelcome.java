@@ -103,6 +103,7 @@ public class GuiWelcome extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                client.quit();
                 GuiWelcome.this.setVisible(false);
                 GuiWelcome.this.dispose();
             }
@@ -136,6 +137,7 @@ public class GuiWelcome extends JFrame {
         quit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                client.quit();
                 GuiWelcome.this.setVisible(false);
                 GuiWelcome.this.dispose();
             }

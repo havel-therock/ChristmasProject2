@@ -8,9 +8,11 @@ import java.awt.event.WindowEvent;
 public class GuiGame extends JFrame {
 
     private JLabel example;
+    private CheckersClient client;
 
     GuiGame (CheckersClient client){
         super("Game in progress");
+        this.client=client;
 
         setPreferredSize(new Dimension(300,200));
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -36,6 +38,7 @@ public class GuiGame extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                client.quit();
                 GuiGame.this.setVisible(false);
                 GuiGame.this.dispose();
 

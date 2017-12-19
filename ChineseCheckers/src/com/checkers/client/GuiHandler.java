@@ -10,10 +10,12 @@ public class GuiHandler {
     private GuiWelcome welcomeWindow;
     private GuiGame gameWindow;
     private CheckersClient client;
+    protected int activeWindows;
 
     GuiHandler(CheckersClient client){
         createGuiWelcome();
         this.client=client;
+        activeWindows=0;
 
     }
 
@@ -25,6 +27,7 @@ public class GuiHandler {
                 welcomeWindow = new GuiWelcome(client);
                 welcomeWindow.setVisible(true);
                 client.setWelcomeWindow(welcomeWindow);
+                activeWindows++;
             }
         });
     }
@@ -33,9 +36,12 @@ public class GuiHandler {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                setupWindow = new GuiSetup(client);
-                setupWindow.setVisible(true);
-                client.setSetupWindow(setupWindow);
+                if(activeWindows==1) {
+                    setupWindow = new GuiSetup(client);
+                    setupWindow.setVisible(true);
+                    client.setSetupWindow(setupWindow);
+                    activeWindows++;
+                }
             }
         });
     }
@@ -47,8 +53,23 @@ public class GuiHandler {
                 gameWindow = new GuiGame(client);
                 gameWindow.setVisible(true);
                 client.setGameWindow(gameWindow);
+                activeWindows++;
+                closeWindows();
             }
         });
+    }
+
+    private void closeWindows(){
+        if(setupWindow!=null){
+            setupWindow.setVisible(false);
+            setupWindow.dispose();
+            activeWindows--;
+        }
+        if(welcomeWindow!=null){
+            welcomeWindow.setVisible(false);
+            welcomeWindow.dispose();
+            activeWindows--;
+        }
     }
 
 }

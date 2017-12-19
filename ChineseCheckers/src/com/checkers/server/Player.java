@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class Player implements Runnable{
     ArrayList<Game> gameList;
+    boolean connected;
     boolean ifActive;
     int number; // number of your team (pieces)
     BufferedReader reader;
@@ -20,12 +21,11 @@ public class Player implements Runnable{
         number = 0;
         this.reader = reader;
         this.writer = writer;
+        connected=true;
     }
 
     public void run(){
-        boolean connected = true; // ends run() which kills thread
-        //String userLine = null;                          // while player is no longer connected
-                                  //
+
         while(connected) {
                 readFromPlayer();
                 writeToPlayer("Pobrano dane z bufora");
@@ -33,64 +33,25 @@ public class Player implements Runnable{
     }
 
     void parseLine(String line){
-        boolean exist;
-        int i;
+
         String[] arguments = line.split(";");
         switch (arguments[0]){
             case "newg":
-                exist = false;
-                for(i = 0; i < gameList.size(); i++){
-                    if(gameList.get(i).getName() == arguments[1]){
-                        exist = true;
-                        break;
-                    }
-                }
-                if(exist){
-                    writeToPlayer("Game already exists (change name)");
-                }else{
-                    Game game = new Game(arguments, this);
-                    gameList.add(game);
-                    this.idGame = game.getName();
-                    writeToPlayer("Successfully created a game");
-                }
+                newCmd(arguments);
                 break;
 
             case "join":
-                exist = false;
-                for(i = 0; i < gameList.size(); i++){
-                    if(gameList.get(i).getName() == arguments[1]){
-                        exist = true;
-                        break;
-                    }
-                }
-                if(exist){
-                    gameList.get(i).addPlayer(this);
-                    this.idGame = gameList.get(i).getName();
-                    writeToPlayer("Successfully joined the game");
-                }else{
-                    writeToPlayer("Game does not exist");
-                }
+                joinCmd(arguments);
                 break;
 
             case "exit":
-                for(i = 0; i < gameList.size(); i++){
-                    if(gameList.get(i).getName() == idGame){
-                        gameList.get(i).deletePieces(number);
-                        gameList.get(i).delete(this);
-                    }
-                }
+                exitCmd(arguments);
                 break;
 
             case "move":
-                for(i = 0; i < gameList.size(); i++){
-                    if(gameList.get(i).getName() == idGame){
-                       if(gameList.get(i).r.checkMove(arguments[1])){
-                           gameList.get(i).b.executeMove(arguments[1]);
-                        }
-                    }
-                    break;
-                }
+                moveCmd(arguments);
                 break;
+
             default:
                 break;
         }
@@ -113,6 +74,68 @@ public class Player implements Runnable{
             e.printStackTrace();
         }
 
+    }
+
+    private void newCmd(String[] arguments){
+        boolean exist = false;
+        int i;
+        for(i = 0; i < gameList.size(); i++){
+            if(gameList.get(i).getName() == arguments[1]){
+                exist = true;
+                break;
+            }
+        }
+        if(exist){
+            writeToPlayer("Game already exists (change name)");
+        }else{
+            Game game = new Game(arguments, this);
+            gameList.add(game);
+            this.idGame = game.getName();
+            writeToPlayer("Successfully created a game");
+        }
+    }
+
+    private void joinCmd(String[] arguments){
+        boolean exist = false;
+        int i;
+        for(i = 0; i < gameList.size(); i++){
+            if(gameList.get(i).getName() == arguments[1]){
+                exist = true;
+                break;
+            }
+        }
+        if(exist){
+            gameList.get(i).addPlayer(this);
+            this.idGame = gameList.get(i).getName();
+            writeToPlayer("Successfully joined the game");
+        }else{
+            writeToPlayer("Game does not exist");
+        }
+    }
+
+    private void moveCmd(String[] arguments) {
+        int i;
+        for (i = 0; i < gameList.size(); i++) {
+            if (gameList.get(i).getName() == idGame) {
+                if (gameList.get(i).r.checkMove(arguments[1])) {
+                    gameList.get(i).b.executeMove(arguments[1]);
+                }
+            }
+        }
+    }
+
+    private void exitCmd(String[] arguments){
+        int i;
+        this.connected=false;
+        writer.println("Player removed");
+        writer.flush();
+        for(i = 0; i < gameList.size(); i++){
+            if(gameList.get(i).getName() == idGame){
+                gameList.get(i).deletePieces(number);
+                gameList.get(i).delete(this);
+                //sth to stop the thread
+            }
+        }
     }
 
     protected void setIfActive(boolean state){
