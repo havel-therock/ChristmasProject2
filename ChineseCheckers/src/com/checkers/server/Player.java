@@ -106,7 +106,7 @@ public class Player implements Runnable{
         boolean exist = false;
         int i;
         for(i = 0; i < gameList.size(); i++){
-            if(gameList.get(i).getName() == arguments[1]){
+            if(gameList.get(i).getName().equals(arguments[1])){
                 exist = true;
                 break;
             }
