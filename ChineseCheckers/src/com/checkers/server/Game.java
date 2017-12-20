@@ -12,7 +12,7 @@ public class Game {
 
     Game(String[] arguments, Player player){
         this.name = arguments[1];
-        b = new Board();
+        b = new Board(arguments);
         r = new Rules();
         players.add(player);
 

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Player implements Runnable{
     ArrayList<Game> gameList;
     boolean connected;
-    boolean ifActive;
+    boolean ifActive; // True if it is a players turn
     int number; // number of your team (pieces)
     BufferedReader reader;
     PrintWriter writer;

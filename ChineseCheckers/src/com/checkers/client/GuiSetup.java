@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 
 public class GuiSetup extends JFrame{
 
+
     private CheckersClient client;
     private JTabbedPane tabbs;
     private JButton create;
