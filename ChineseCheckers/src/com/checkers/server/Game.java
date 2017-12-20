@@ -8,13 +8,13 @@ public class Game {
     Board b;
     Rules r;
     String name;
-    ArrayList<Runnable> players = new ArrayList<Runnable>();
+    ArrayList<Runnable> playerList = new ArrayList<Runnable>();
 
     Game(String[] arguments, Player player){
         this.name = arguments[1];
         b = new Board();
         r = new Rules();
-        players.add(player);
+        playerList.add(player);
 
     }
 
@@ -23,16 +23,21 @@ public class Game {
     }
 
     protected void addPlayer(Player player){
-        players.add(player);
+        playerList.add(player);
     }
 
     protected void delete(Player player){
-        players.remove(player);
+        playerList.remove(player);
     }
 
     protected void deletePieces(int number){
         b.deletePlayer(number);
-
+    }
+    protected void sendMessage(String message){
+        for(int i=0;i<playerList.size();i++){
+            Player currentPlayer = (Player) playerList.get(i);
+            currentPlayer.writeToPlayer(message);
+        }
     }
 
 }

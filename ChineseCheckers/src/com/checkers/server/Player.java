@@ -57,7 +57,7 @@ public class Player implements Runnable{
         }
     }
 
-    void writeToPlayer(String message){
+    protected void writeToPlayer(String message){
         writer.println(message);
         writer.flush();
     }
@@ -86,7 +86,7 @@ public class Player implements Runnable{
             }
         }
         if(exist){
-            writeToPlayer("Game already exists (change name)");
+            writeToPlayer("Game already exists");
         }else{
             Game game = new Game(arguments, this);
             gameList.add(game);
@@ -119,6 +119,7 @@ public class Player implements Runnable{
             if (gameList.get(i).getName() == idGame) {
                 if (gameList.get(i).r.checkMove(arguments[1])) {
                     gameList.get(i).b.executeMove(arguments[1]);
+                    gameList.get(i).sendMessage(arguments[1]);
                 }
             }
         }
@@ -137,6 +138,7 @@ public class Player implements Runnable{
             }
         }
     }
+
 
     protected void setIfActive(boolean state){
         this.ifActive = state;

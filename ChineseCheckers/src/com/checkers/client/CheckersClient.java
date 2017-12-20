@@ -13,20 +13,16 @@ public class CheckersClient{
     PrintWriter writer;
     GuiHandler handler;
     ClientListener listener;
-    private GuiSetup setupWindow;
     private GuiWelcome welcomeWindow;
-    private GuiGame gameWindow;
-    private boolean isConnected;
+
 
 
     public static void main(String[] args){
         CheckersClient client = new CheckersClient();
         client.createHandler();
-        //Thread listen = new ClientListener(client.listener);
     }
 
     private void createHandler(){
-        isConnected=false;
         handler = new GuiHandler(this);
     }
 
@@ -36,7 +32,10 @@ public class CheckersClient{
             InputStreamReader inStream = new InputStreamReader(socket.getInputStream());
             reader = new BufferedReader(inStream);
             writer = new PrintWriter(socket.getOutputStream());
-            isConnected=true;
+            handler.setIsConnected(true);
+            listener = new ClientListener(reader,writer,handler,welcomeWindow);
+            handler.setListener(listener);
+            welcomeWindow.setListener(listener);
             return true;
         }catch(IOException e){
            // e.printStackTrace();
@@ -46,43 +45,8 @@ public class CheckersClient{
 
     }
 
-   protected void newGame(String data){               // dummy method
-        if(newGameRequest(data)) {
-            handler.createBoardWindow();
-        }
-    }
-
-    private boolean newGameRequest(String data){
-        writer.println("newg;" + data);
-        writer.flush();
-        return true;
-    }
-
-    protected  void joinGame(String name){
-        if(name.equals("")){
-            welcomeWindow.showMessage("Game name cannot be empty");
-            return;
-        }else if(name.length()>10){
-            welcomeWindow.showMessage("Game name is too long");
-            return;
-        }else {
-            if(joinGameRequest(name)){
-                handler.createBoardWindow();
-            } else{
-                welcomeWindow.showMessage("Cannot join game");
-            }
-        }
-    }
-
-    private boolean joinGameRequest(String name){           //dummy method
-        if(name.equals("bad"))
-            return false;
-        else
-            return true;
-    }
-
-    protected void quit(){
-        if(isConnected){
+    void quit(){
+        if(handler.getIsConnected()){
             if(handler.activeWindows==1) {
                 writer.println("exit");
                 writer.flush();
@@ -92,17 +56,7 @@ public class CheckersClient{
         }
     }
 
-    void setGameWindow(GuiGame gameWindow){
-        this.gameWindow=gameWindow;
-    }
     void setWelcomeWindow(GuiWelcome welcomeWindow){
         this.welcomeWindow=welcomeWindow;
-    }
-    void setSetupWindow(GuiSetup setupWindow){
-        this.setupWindow=setupWindow;
-    }
-
-    GuiHandler getGuiHandler(){
-        return handler;
     }
 }

@@ -1,33 +1,78 @@
 package com.checkers.client;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
-class ClientListener implements Runnable{
+class ClientListener {
 
     BufferedReader reader;
+    PrintWriter writer;
+    protected  GuiSetup setupWindow;
+    protected  GuiWelcome welcomeWindow;
+    protected  GuiGame gameWindow;
+    protected GuiHandler handler;
 
-    ClientListener(BufferedReader reader){
+    ClientListener(BufferedReader reader,PrintWriter writer, GuiHandler handler ,GuiWelcome welcomeWindow){
+
         this.reader = reader;
+        this.handler = handler;
+        this.writer = writer;
+        this.welcomeWindow = welcomeWindow;
+        create();
+
     }
 
-    public void run() {
-        listen();
+    public void create() {
+        Thread t = new Thread(new Listening(this));
+        t.start();
     }
 
-    protected void listen(){
-        while(true){
-            try{
-                String serverLine = null;
-                while(serverLine == null) {
-                    serverLine = reader.readLine();
-                    System.out.println(serverLine);
-                    //parseLine(serverLine);
-                }
-            }catch(IOException e){
-                e.printStackTrace();
-            }
+
+    protected void newGameCmd(String line){
+        handler.createBoardWindow();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        gameWindow.showMessage(line);
     }
 
+    protected void joinGameCmd(String line){
+        handler.createBoardWindow();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        gameWindow.showMessage(line);
+
+    }
+    protected void sendMessage(String message){
+        writer.println(message);
+        writer.flush();
+    }
+
+    protected void quit(){
+            if(handler.activeWindows==1) {
+                sendMessage("exit");
+            }else{
+                handler.activeWindows--;
+            }
+    }
+
+    void setGameWindow(GuiGame gameWindow){
+        this.gameWindow=gameWindow;
+    }
+
+    void setSetupWindow(GuiSetup setupWindow){
+        this.setupWindow=setupWindow;
+    }
+
+
+    GuiHandler getGuiHandler(){
+        return handler;
+    }
 }

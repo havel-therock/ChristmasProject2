@@ -23,8 +23,10 @@ public class GuiWelcome extends JFrame {
     private GridBagConstraints constraints;
     private String message;
     private boolean isConnected;
-    
+
+
     private CheckersClient client;
+    private ClientListener listener;
 
 
     GuiWelcome(CheckersClient client){
@@ -103,7 +105,11 @@ public class GuiWelcome extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                client.quit();
+                if(listener==null) {
+                    client.quit();
+                }else{
+                    listener.quit();
+                }
                 GuiWelcome.this.setVisible(false);
                 GuiWelcome.this.dispose();
             }
@@ -113,7 +119,7 @@ public class GuiWelcome extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(isConnected) {
-                    client.getGuiHandler().createGuiSetup();
+                    listener.getGuiHandler().createGuiSetup();
                 }
             }
         });
@@ -122,7 +128,9 @@ public class GuiWelcome extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(isConnected) {
-                    client.joinGame(gameText.getText());
+                    if(!(gameText.getText().equals(""))&&gameText.getText().length()<10){
+                        listener.sendMessage("join;" + gameText.getText());
+                    }
                 }
             }
         });
@@ -137,7 +145,11 @@ public class GuiWelcome extends JFrame {
         quit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                client.quit();
+                if(listener==null) {
+                    client.quit();
+                }else{
+                    listener.quit();
+                }
                 GuiWelcome.this.setVisible(false);
                 GuiWelcome.this.dispose();
             }
@@ -156,10 +168,13 @@ public class GuiWelcome extends JFrame {
         });
     }
 
-    void showMessage(String message){
+    protected void showMessage(String message){
         JOptionPane.showMessageDialog(GuiWelcome.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
     }
 
+    protected void setListener(ClientListener listener){
+        this.listener=listener;
+    }
 
 
 }
