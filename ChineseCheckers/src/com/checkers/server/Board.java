@@ -22,12 +22,13 @@ public class Board {
         int corners = 0;
         int cornerBase = 0;
         try{
-            players = Integer.parseInt(arguments[1]);
-            pieces = Integer.parseInt(arguments[2]);
-            corners = Integer.parseInt(arguments[3]);
-            cornerBase  = Integer.parseInt(arguments[4]);
+            players = Integer.parseInt(arguments[2]);
+            pieces = Integer.parseInt(arguments[3]);
+            corners = Integer.parseInt(arguments[4]);
+            cornerBase  = Integer.parseInt(arguments[5]);
         }catch(NumberFormatException ex){
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            return false;
             //message to player you are not giving numbers
             //return false; ???
         }

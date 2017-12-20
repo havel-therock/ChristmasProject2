@@ -10,11 +10,12 @@ public class Game {
     String name;
     ArrayList<Runnable> playerList = new ArrayList<Runnable>();
 
-    Game(String[] arguments, Player player){
+    Game(String[] arguments, Player player) throws WrongData{
         this.name = arguments[1];
+        playerList.add(player);
         b = new Board(arguments);
         r = new Rules();
-        playerList.add(player);
+
 
     }
 

@@ -19,7 +19,7 @@ ClientListener listener;
     }
 
     protected void parseLine(String line){
-        System.out.println(line);
+        //System.out.println(line);
         switch (line){
             case "Game already exists":
                 listener.setupWindow.showMessage(line);
@@ -36,6 +36,9 @@ ClientListener listener;
             case "Game does not exist":
                listener.welcomeWindow.showMessage(line);
                 break;
+            case "Error 37":
+                listener.setupWindow.showMessage(line);
+
 
             default:
                 break;

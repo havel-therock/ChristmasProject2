@@ -60,7 +60,6 @@ class ClientListener {
             if(handler.activeWindows==1) {
                 sendMessage("exit");
                 t.stop();
-
             }else{
                 handler.activeWindows--;
             }

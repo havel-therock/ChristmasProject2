@@ -28,7 +28,7 @@ public class Player implements Runnable{
 
         while(connected) {
                 readFromPlayer();
-                writeToPlayer("Pobrano dane z bufora");
+                //writeToPlayer("Pobrano dane z bufora");
         }
     }
 
@@ -59,6 +59,7 @@ public class Player implements Runnable{
 
     protected void writeToPlayer(String message){
         writer.println(message);
+        System.out.println(message);
         writer.flush();
     }
 
@@ -88,10 +89,16 @@ public class Player implements Runnable{
         if(exist){
             writeToPlayer("Game already exists");
         }else{
-            Game game = new Game(arguments, this);
-            gameList.add(game);
-            this.idGame = game.getName();
-            writeToPlayer("Successfully created a game");
+            try {
+                Game game = new Game(arguments, this);
+                gameList.add(game);
+                this.idGame = game.getName();
+                writeToPlayer("Successfully created a game");
+            }catch (WrongData ex){
+                writeToPlayer("Error 37");
+            }
+
+
         }
     }
 
