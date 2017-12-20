@@ -13,6 +13,7 @@ class ClientListener {
     protected  GuiWelcome welcomeWindow;
     protected  GuiGame gameWindow;
     protected GuiHandler handler;
+    protected Thread t;
 
     ClientListener(BufferedReader reader,PrintWriter writer, GuiHandler handler ,GuiWelcome welcomeWindow){
 
@@ -25,7 +26,7 @@ class ClientListener {
     }
 
     public void create() {
-        Thread t = new Thread(new Listening(this));
+        t = new Thread(new Listening(this));
         t.start();
     }
 
@@ -58,6 +59,8 @@ class ClientListener {
     protected void quit(){
             if(handler.activeWindows==1) {
                 sendMessage("exit");
+                t.stop();
+
             }else{
                 handler.activeWindows--;
             }
