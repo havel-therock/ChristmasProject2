@@ -4,11 +4,13 @@ public class Board {
     int[][] board;
 
     Board(String[] arguments) throws WrongData{
-        if(validateArguments(arguments)){
-
-        }else{
-            throw new WrongData("messageError");
+        String message = validateArguments(arguments);
+        if (!"ArgumentsClear".equals(message)) {
+            throw new WrongData(message);
             //print message to player smth wrong with arguments of the board
+        } else {
+            //createborad()
+            return;
         }
     }
 
@@ -16,7 +18,7 @@ public class Board {
     // arguments[2] amount of pieces per player
     // arguments[3] amount of corners
     // arguments[4] width of corner's base
-    boolean validateArguments(String[] arguments){
+    String validateArguments(String[] arguments){
         int players = 0;
         int pieces = 0;
         int corners = 0;
@@ -28,16 +30,16 @@ public class Board {
             cornerBase  = Integer.parseInt(arguments[5]);
         }catch(NumberFormatException ex){
             //ex.printStackTrace();
-            return false;
+            return "Please enter some INTEGERS!!!";
             //message to player you are not giving numbers
             //return false; ???
         }
         if(reverseAdding(cornerBase) < pieces){
             // message?
-            return false;
+            return "Too many pieces for corner size";
         }
 
-        return true;
+        return "ArgumentsClear";
     }
 
     int reverseAdding(int i){

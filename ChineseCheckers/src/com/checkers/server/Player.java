@@ -95,7 +95,7 @@ public class Player implements Runnable{
                 this.idGame = game.getName();
                 writeToPlayer("Successfully created a game");
             }catch (WrongData ex){
-                writeToPlayer("Error 37");
+                writeToPlayer(ex.message);
             }
 
 
