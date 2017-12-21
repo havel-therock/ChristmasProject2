@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Player implements Runnable{
     ArrayList<Game> gameList;
-    boolean connected;
+    volatile boolean connected;
     boolean ifActive; // True if it is a players turn
     int number; // number of your team (pieces)
     BufferedReader reader;
@@ -141,7 +141,6 @@ public class Player implements Runnable{
             if(gameList.get(i).getName() == idGame){
                 gameList.get(i).deletePieces(number);
                 gameList.get(i).delete(this);
-                //sth to stop the thread
             }
         }
     }

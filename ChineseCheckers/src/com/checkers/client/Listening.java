@@ -6,14 +6,19 @@ import java.io.IOException;
 class Listening  implements Runnable  {
 
 ClientListener listener;
+volatile boolean end;
 
     Listening(ClientListener listener){
-
       this.listener = listener;
+      this.end = false;
+    }
+
+    void setEnd(boolean set){
+        this.end = set;
     }
 
     public void run() {
-      while(true){
+      while(!end){
           listen();
       }
     }
@@ -47,7 +52,6 @@ ClientListener listener;
 
 
     protected void listen(){
-        while(true){
             try{
                 String serverLine = null;
                 while(serverLine == null) {
@@ -58,7 +62,6 @@ ClientListener listener;
             }catch(IOException e){
                 e.printStackTrace();
             }
-        }
     }
 
 

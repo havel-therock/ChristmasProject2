@@ -7,7 +7,7 @@ public class Board {
         if(validateArguments(arguments)){
 
         }else{
-            throw new WrongData();
+            throw new WrongData("messageError");
             //print message to player smth wrong with arguments of the board
         }
     }
