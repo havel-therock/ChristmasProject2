@@ -1,7 +1,5 @@
 package com.checkers.server;
 
-import com.checkers.client.CheckersClient;
-
 import java.util.ArrayList;
 
 public class Game {

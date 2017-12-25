@@ -1,5 +1,4 @@
 package com.checkers.client;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -105,10 +104,8 @@ public class GuiWelcome extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if(listener==null) {
-                    client.quit();
-                }else{
-                    listener.quit();
+                if(listener != null){
+                    listener.quit(1);
                 }
                 GuiWelcome.this.setVisible(false);
                 GuiWelcome.this.dispose();
@@ -145,10 +142,8 @@ public class GuiWelcome extends JFrame {
         quit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(listener==null) {
-                    client.quit();
-                }else{
-                    listener.quit();
+                if(listener != null){
+                    listener.quit(1);
                 }
                 GuiWelcome.this.setVisible(false);
                 GuiWelcome.this.dispose();

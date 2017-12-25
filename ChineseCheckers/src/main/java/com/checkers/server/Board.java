@@ -2,6 +2,11 @@ package com.checkers.server;
 
 public class Board {
     int[][] board;
+    int players = 0;
+    int pieces = 0;
+    int corners = 0;
+    int cornerWidth = 0;
+    int length;
 
     Board(String[] arguments) throws WrongData{
         String message = validateArguments(arguments);
@@ -9,32 +14,56 @@ public class Board {
             throw new WrongData(message);
             //print message to player smth wrong with arguments of the board
         } else {
-            //createborad()
+            createBoard();
+            //fillPlayers();
             return;
         }
     }
 
-    // arguments[1] amount of players
-    // arguments[2] amount of pieces per player
-    // arguments[3] amount of corners
-    // arguments[4] width of corner's base
+    private void createBoard(){
+        int i,j,tmp,counter;
+        length=cornerWidth*4+3;
+        board = new int[length][length];
+
+        for(i=0;i<length;i++){
+            for(j=0;j<length;j++){
+                board[i][j]=-1;
+            }
+        }
+
+        // filling the board array
+
+
+
+        for(i=0;i<length;i++){
+            for(j=0;j<length;j++){
+                System.out.print(board[i][j]+" ");
+            }
+            System.out.println();
+        }
+    }
+
+
+
+    /*
+        arguments[2] amount of players
+        arguments[3] amount of pieces per player
+        arguments[4] amount of corners
+        arguments[5] width of corner's base
+    */
     String validateArguments(String[] arguments){
-        int players = 0;
-        int pieces = 0;
-        int corners = 0;
-        int cornerBase = 0;
         try{
             players = Integer.parseInt(arguments[2]);
             pieces = Integer.parseInt(arguments[3]);
             corners = Integer.parseInt(arguments[4]);
-            cornerBase  = Integer.parseInt(arguments[5]);
+            cornerWidth  = Integer.parseInt(arguments[5]);
         }catch(NumberFormatException ex){
             //ex.printStackTrace();
             return "Please enter some INTEGERS!!!";
             //message to player you are not giving numbers
             //return false; ???
         }
-        if(reverseAdding(cornerBase) < pieces){
+        if(reverseAdding(cornerWidth) < pieces){
             // message?
             return "Too many pieces for corner size";
         }

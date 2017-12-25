@@ -94,7 +94,7 @@ public class GuiSetup extends JFrame{
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                listener.quit();
+                listener.quit(2);
                 GuiSetup.this.setVisible(false);
                 GuiSetup.this.dispose();
             }

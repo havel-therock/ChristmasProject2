@@ -39,7 +39,7 @@ public class GuiGame extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                listener.quit();
+                listener.quit(3);
                 GuiGame.this.setVisible(false);
                 GuiGame.this.dispose();
 

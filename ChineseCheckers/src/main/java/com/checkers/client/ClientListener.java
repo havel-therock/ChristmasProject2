@@ -23,7 +23,6 @@ class ClientListener {
         this.writer = writer;
         this.welcomeWindow = welcomeWindow;
         create();
-
     }
 
     public void create() {
@@ -58,14 +57,29 @@ class ClientListener {
         writer.flush();
     }
 
-    protected void quit(){
+    protected void quit( int number){
+
+        if(number == 1) {
+            welcomeWindow = null;
+        }else if(number == 2) {
+            setupWindow = null;
+        }else {
+            gameWindow = null;
+        }
+
             if(handler.activeWindows==1) {
                 sendMessage("exit");
                 listener.setEnd(true);
-
             }else{
                 handler.activeWindows--;
             }
+    }
+
+
+    protected void showMessage(String message) {
+        if (gameWindow != null) {
+            gameWindow.showMessage(message);
+        }
     }
 
     void setGameWindow(GuiGame gameWindow){

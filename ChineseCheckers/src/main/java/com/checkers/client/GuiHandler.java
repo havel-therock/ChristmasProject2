@@ -12,7 +12,6 @@ public class GuiHandler {
     private CheckersClient client;
     protected int activeWindows;
     protected ClientListener listener;
-    protected boolean isConnected;
 
     GuiHandler(CheckersClient client){
         createGuiWelcome();
@@ -48,7 +47,7 @@ public class GuiHandler {
         });
     }
 
-    protected void createBoardWindow(){                        //dummy method
+    protected void createBoardWindow(){
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -65,21 +64,15 @@ public class GuiHandler {
         if(setupWindow!=null){
             setupWindow.setVisible(false);
             setupWindow.dispose();
+            setupWindow = null;
             activeWindows--;
         }
         if(welcomeWindow!=null){
             welcomeWindow.setVisible(false);
             welcomeWindow.dispose();
+            welcomeWindow = null;
             activeWindows--;
         }
-    }
-
-
-    protected void setIsConnected(boolean state){
-        this.isConnected = state;
-    }
-    protected  boolean getIsConnected(){
-        return isConnected;
     }
 
     protected void setListener(ClientListener listener){

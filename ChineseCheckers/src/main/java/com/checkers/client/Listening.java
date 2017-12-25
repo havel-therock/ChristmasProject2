@@ -41,9 +41,9 @@ volatile boolean end;
             case "Game does not exist":
                listener.welcomeWindow.showMessage(line);
                 break;
-            default:                                    //this code displays
-                listener.setupWindow.showMessage(line); // all messages received
-                break;                                  // from server
+            default:
+                listener.showMessage(line);
+                break;
         }
     }
 

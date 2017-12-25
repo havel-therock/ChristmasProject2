@@ -1,5 +1,6 @@
 package com.checkers.server;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,14 +12,27 @@ import java.util.ArrayList;
 
 class CheckersServer {
 
+    // serverWindow;
+    ServerSocket mainSocket;
+    ArrayList<Runnable> playerList = new ArrayList<Runnable>();
+    ArrayList<Game> gameList = new ArrayList<Game>();
+
     public static void main(String[] args){
         CheckersServer a = new CheckersServer();
+        //a.startGui();
         a.startServer();
     }
-
-    ServerSocket mainSocket;
-    ArrayList<Runnable> playerList = new ArrayList<>();
-    ArrayList<Game> gameList = new ArrayList<Game>();
+ /*
+    void startGui(){
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                serverWindow = new GuiServer();
+                serverWindow.setVisible(true);
+            }
+        });
+    }
+    */
 
     void startServer() {
         try {
