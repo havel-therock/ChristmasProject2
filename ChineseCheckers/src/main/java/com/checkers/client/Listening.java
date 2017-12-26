@@ -1,20 +1,31 @@
 package com.checkers.client;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-
 
 class Listening  implements Runnable  {
 
-ClientListener listener;
-volatile boolean end;
+    private ClientListener clientListener;
+    private BufferedReader reader;
+    private  GuiSetup setupWindow;
+    protected  GuiWelcome welcomeWindow;
+    protected  GuiGame gameWindow;
+    private volatile boolean end;
 
-    Listening(ClientListener listener){
-      this.listener = listener;
+    Listening(ClientListener listener, BufferedReader reader, GuiWelcome welcomeWindow,
+              GuiSetup setupWindow, GuiGame gameWindow){
+
+      this.clientListener = listener;
+      this.reader = reader;
+      this.welcomeWindow = welcomeWindow;
+      this.setupWindow = setupWindow;
+      this. gameWindow = gameWindow;
+
       this.end = false;
     }
 
-    void setEnd(boolean set){
-        this.end = set;
+    void setEnd(){
+        this.end = true;
     }
 
     public void run() {
@@ -24,25 +35,32 @@ volatile boolean end;
     }
 
     protected void parseLine(String line){
-        //System.out.println(line);
+
         switch (line){
             case "Game already exists":
-                listener.setupWindow.showMessage(line);
+                setupWindow.showMessage(line);
                 break;
 
             case "Successfully created a game":
-                listener.newGameCmd(line);
+                clientListener.newGameCmd(line);
                 break;
 
             case "Successfully joined the game":
-                listener.joinGameCmd(line);
+                clientListener.joinGameCmd(line);
                 break;
 
             case "Game does not exist":
-               listener.welcomeWindow.showMessage(line);
+                welcomeWindow.showMessage(line);
                 break;
+
+            case "Server will stop soon":
+                clientListener.handleServerClosing();
+                break;
+            case "Player removed":
+                break;
+
             default:
-                listener.showMessage(line);
+                clientListener.showMessage(line);
                 break;
         }
     }
@@ -52,7 +70,7 @@ volatile boolean end;
             try{
                 String serverLine = null;
                 while(serverLine == null) {
-                    serverLine = listener.reader.readLine();
+                    serverLine = reader.readLine();
                     System.out.println(serverLine);
                     parseLine(serverLine);
                 }

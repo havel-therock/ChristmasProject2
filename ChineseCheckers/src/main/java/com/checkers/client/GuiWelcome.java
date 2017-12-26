@@ -105,10 +105,11 @@ public class GuiWelcome extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 if(listener != null){
-                    listener.quit(1);
+                    listener.quit(0);
+                }else{
+                    GuiWelcome.this.setVisible(false);
+                    GuiWelcome.this.dispose();
                 }
-                GuiWelcome.this.setVisible(false);
-                GuiWelcome.this.dispose();
             }
         });
 
@@ -116,7 +117,7 @@ public class GuiWelcome extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(isConnected) {
-                    listener.getGuiHandler().createGuiSetup();
+                    client.createGuiSetup();
                 }
             }
         });
@@ -143,10 +144,11 @@ public class GuiWelcome extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(listener != null){
-                    listener.quit(1);
+                    listener.quit(0);
+                }else{
+                    GuiWelcome.this.setVisible(false);
+                    GuiWelcome.this.dispose();
                 }
-                GuiWelcome.this.setVisible(false);
-                GuiWelcome.this.dispose();
             }
         });
 
@@ -171,5 +173,13 @@ public class GuiWelcome extends JFrame {
         this.listener=listener;
     }
 
+    protected void setConnected(boolean state){
+        this.isConnected = state;
+        if (this.isConnected){
+            ip.setText("Connected");
+        }else{
+            ip.setText("Not connected");
+        }
+    }
 
 }

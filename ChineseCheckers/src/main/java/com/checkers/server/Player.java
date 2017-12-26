@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class Player implements Runnable{
+public class Player {
     ArrayList<Game> gameList;
     volatile boolean connected;
     boolean ifActive; // True if it is a players turn
@@ -13,6 +13,9 @@ public class Player implements Runnable{
     BufferedReader reader;
     PrintWriter writer;
     String idGame;
+    String userLine;
+    PlayerListener playerListener;
+    Thread listenerThread;
 
     Player(BufferedReader reader, PrintWriter writer, ArrayList<Game> gameList){
         idGame = null;
@@ -22,14 +25,11 @@ public class Player implements Runnable{
         this.reader = reader;
         this.writer = writer;
         connected=true;
-    }
 
-    public void run(){
+        playerListener = new PlayerListener(this);
+        listenerThread = new Thread(playerListener);
+        listenerThread.start();
 
-        while(connected) {
-                readFromPlayer();
-                //writeToPlayer("Pobrano dane z bufora");
-        }
     }
 
     void parseLine(String line){
@@ -45,7 +45,7 @@ public class Player implements Runnable{
                 break;
 
             case "exit":
-                exitCmd(arguments);
+                exitCmd();
                 break;
 
             case "move":
@@ -59,23 +59,10 @@ public class Player implements Runnable{
 
     protected void writeToPlayer(String message){
         writer.println(message);
-        System.out.println(message);
         writer.flush();
+        System.out.println(message);
     }
 
-    void readFromPlayer(){
-        try{
-            String userLine = null;
-            while(userLine == null) {
-                userLine = reader.readLine();
-                System.out.println(userLine);
-                parseLine(userLine);
-            }
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-
-    }
 
     private void newCmd(String[] arguments){
         boolean exist = false;
@@ -132,11 +119,10 @@ public class Player implements Runnable{
         }
     }
 
-    private void exitCmd(String[] arguments){
+    protected void exitCmd(){
         int i;
         this.connected=false;
-        writer.println("Player removed");
-        writer.flush();
+        writeToPlayer("Player removed");
         for(i = 0; i < gameList.size(); i++){
             if(gameList.get(i).getName() == idGame){
                 gameList.get(i).deletePieces(number);
@@ -146,20 +132,5 @@ public class Player implements Runnable{
     }
 
 
-    protected void setIfActive(boolean state){
-        this.ifActive = state;
-    }
-
-    protected boolean getIfActive(){
-        return this.ifActive;
-    }
-
-    protected void setNumber(int number){
-        this.number = number;
-    }
-
-    protected int getNumber(){
-        return this.number;
-    }
 
 }

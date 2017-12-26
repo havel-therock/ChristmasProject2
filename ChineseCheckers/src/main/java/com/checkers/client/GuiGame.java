@@ -15,7 +15,6 @@ public class GuiGame extends JFrame {
         super("Game in progress");
         this.listener = listener;
 
-        setPreferredSize(new Dimension(300,200));
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         createComponents();
@@ -39,10 +38,7 @@ public class GuiGame extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                listener.quit(3);
-                GuiGame.this.setVisible(false);
-                GuiGame.this.dispose();
-
+                listener.quit(2);
             }
         });
     }

@@ -6,7 +6,7 @@ public class Game {
     Board b;
     Rules r;
     String name;
-    ArrayList<Runnable> playerList = new ArrayList<Runnable>();
+    ArrayList<Player> playerList = new ArrayList<>();
 
     Game(String[] arguments, Player player) throws WrongData{
         this.name = arguments[1];
