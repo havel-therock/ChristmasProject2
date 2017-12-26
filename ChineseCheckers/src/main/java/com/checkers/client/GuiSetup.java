@@ -46,7 +46,7 @@ public class GuiSetup extends JFrame{
         players = new JLabel("Number of players: ");
         gameName = new JLabel("Name of the game: ");
         corners = new JLabel("Number of corners: ");
-        cornerWidth = new JLabel("Number of corners: ");
+        cornerWidth = new JLabel("Width of corners' base: ");
         gameNameTxt = new JTextField();
         playersTxt = new JTextField("3");
         piecesTxt = new JTextField("10");

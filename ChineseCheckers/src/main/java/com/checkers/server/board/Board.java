@@ -1,25 +1,67 @@
-package com.checkers.server;
+package com.checkers.server.board;
 
 public class Board {
+    int[] fieldsPerRow;
     int[][] board;
-    int players = 0;
-    int pieces = 0;
-    int corners = 0;
-    int cornerWidth = 0;
-    int length;
+    int[][] graph;
+    int players;
+    int pieces;
+    int corners;
+    int cornerWidth;
+    //int length;
 
-    Board(String[] arguments) throws WrongData{
+    public Board(String[] arguments) throws WrongData {
         String message = validateArguments(arguments);
         if (!"ArgumentsClear".equals(message)) {
             throw new WrongData(message);
             //print message to player smth wrong with arguments of the board
         } else {
-            createBoard();
+            setBoardFields(arguments);
+            displayboard(fieldsPerRow);
+           // createBoard();
             //fillPlayers();
-            return;
         }
     }
 
+    public void displayboard(int[] board){              //  temporary to display board
+        for(int i = 0; i < board.length; i++)           //  for development usage
+            System.out.println(board[i]);               //  need to be deleted in final version
+    }
+
+    private void setBoardFields(String[] arguments){
+        players = Integer.parseInt(arguments[2]);
+        pieces = Integer.parseInt(arguments[3]);
+        corners = Integer.parseInt(arguments[4]);
+        cornerWidth = Integer.parseInt(arguments[5]);
+        setFieldsPerRow(cornerWidth);
+    }
+
+    private void setFieldsPerRow(int cornerWidth){
+        int height = cornerWidth*4 + 1;
+        this.fieldsPerRow = new int[height];
+        int fields = 0;
+        for(int i = 0; i < height; i++){
+            if(fields < cornerWidth){
+                fields++;
+                this.fieldsPerRow[i] = fields;
+            }else{
+                fields = fields*3 + 1;
+                while(i < height/2 + 1){
+                    fieldsPerRow[i] = fields;
+                    fields--;
+                    i++;
+                }
+                for(int j = i-2; j >= 0; j--){
+                    fieldsPerRow[i] = fieldsPerRow[j];
+                    i++;
+                }
+            }
+        }
+
+    }
+
+
+    /*
     private void createBoard(){
         int i,j,tmp,counter;
         length=cornerWidth*4+3;
@@ -72,12 +114,12 @@ public class Board {
     }
 
     int reverseAdding(int i){
-            if(i<1)
-                return 0;
-            return i+reverseAdding(i-1);
+        if(i<1)
+            return 0;
+        return i+reverseAdding(i-1);
     }
 
-    
+
     void buildCorner(int baseWidth, int piecesAmount){
 
     }
@@ -101,11 +143,12 @@ public class Board {
 
 
 
-    void deletePlayer(int number){
+    public void deletePlayer(int number){
 
     }
 
-    void executeMove(String move){
+    public void executeMove(String move){
 
     }
 }
+
