@@ -2,6 +2,13 @@ package com.checkers.server.board;
 
 import java.util.ArrayList;
 
+//    1
+// 6 0 0 2
+//  0 0 0
+// 5 0 0 3
+//    4
+//Board and it's corners(players' numbers)
+
 public class Board {
     int[] fieldsPerRow;
     int[][] tempBoard;
@@ -14,6 +21,12 @@ public class Board {
     int cornerWidth;
     final static int BOARD_FIELD = 0;
     final static int NOT_PLAYABLE_FIELD = -1;
+    final int PLAYER_ONE = 1;
+    final int PLAYER_TWO = 2;
+    final int PLAYER_THREE = 3;
+    final int PLAYER_FOUR = 4;
+    final int PLAYER_FIVE = 5;
+    final int PLAYER_SIX = 6;
 
     public Board(String[] arguments) throws WrongData {
         String message = validateArguments(arguments);
@@ -205,8 +218,11 @@ public class Board {
     private void fillPlayers() {
         switch (players){
             case 2:
+                fillFirst();
+                fillFourth();
                 break;
             case 3:
+                //fillFirst();//set target osobno
                 break;
             case 4:
                 break;
@@ -214,6 +230,41 @@ public class Board {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void fillFirst(){
+        for(int i = 1; i <= sumFields(cornerWidth); i++){
+            for(int j = 0; j < graph.size(); j++){
+                if(graph.get(j).getID() == i){
+                    graph.get(j).setPlayer(PLAYER_ONE);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void fillSecond(){
+
+    }
+
+    private void fillFourth(){
+        for(int i = sumFields(fieldsPerRow.length); i > sumFields(fieldsPerRow.length) - sumFields(cornerWidth); i--){
+            for(int j = 0; j < graph.size(); j++){
+                if(graph.get(j).getID() == i){
+                    graph.get(j).setPlayer(PLAYER_FOUR);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void fillSixth(){
+        int startID = sumFields(cornerWidth) + 1;
+        for(int i = cornerWidth; i > 0; i--){
+            for(int j = cornerWidth; j > 0; j--){
+
+            }
         }
     }
 
@@ -232,6 +283,11 @@ public class Board {
         }
     }
 
+    public void dis(){
+        for(int i = 0; i < graph.size(); i++){
+            System.out.print(graph.get(i).getValue());
+        }
+    }
 
     /*
         arguments[2] amount of players

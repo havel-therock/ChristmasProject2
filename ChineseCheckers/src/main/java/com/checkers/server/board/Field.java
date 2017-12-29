@@ -18,11 +18,6 @@ class Field {
         return ID;
     }
 
-    public void setPlayer(int value) {
-        this.value = value;
-        targetValue = (value + 2) % 6 + 1;
-    }
-
     public void setValue(int value){
         this.value = value;
     }
@@ -31,8 +26,17 @@ class Field {
         return value;
     }
 
+    public void setTargetValue(int targetValue){
+        this.targetValue = targetValue;
+    }
+
     public int getTargetValue() {
         return targetValue;
+    }
+
+    public void setPlayer(int value) {
+        this.value = value;
+        targetValue = (value + 2) % 6 + 1;
     }
 
     //get target value i get target beda uzywane do sprawdzania czy ktos wygral.
