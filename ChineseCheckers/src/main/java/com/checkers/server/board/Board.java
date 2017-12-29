@@ -12,6 +12,8 @@ public class Board {
     int pieces;
     int corners;
     int cornerWidth;
+    final static int BOARD_FIELD = 0;
+    final static int NOT_PLAYEABLE_FIELD = -1;
 
     public Board(String[] arguments) throws WrongData {
         String message = validateArguments(arguments);
@@ -70,19 +72,18 @@ public class Board {
     private void prefillTempBoard(int height, int length){
         for(int i=0;i<height;i++){
             for(int j=0;j<length;j++){
-                this.tempBoard[i][j]= 1;
+                this.tempBoard[i][j]= NOT_PLAYEABLE_FIELD;
             }
         }
     }
 
     private void fillTempBoard(int height, int length){
-        int counter = 0;
         for(int i = 1; i < height - 1; i++){
             int fields = fieldsPerRow[i - 1];
             int verticalCenter = length/2 + 1;
             int start = verticalCenter - fields;
             for(int j=0;j<fields;j++){
-                this.tempBoard[i][start] = 0;
+                this.tempBoard[i][start] = BOARD_FIELD;
                 start = start + 2;
             }
 
@@ -96,12 +97,12 @@ public class Board {
     private void createGraph(){
         graph = new ArrayList<Field>();
         for(int i = 1; i <= sumFields(fieldsPerRow.length); i++){
-            graph.add(new Field(i,0));
+            graph.add(new Field(i,BOARD_FIELD));
         }
         System.out.println(graph.size());
         for(int i = 1; i < tempBoardHeigh - 1; i++){
             for(int j = 1; j < tempBoardLength - 1; j++){
-                if(tempBoard[i][j] == 0){
+                if(tempBoard[i][j] == BOARD_FIELD){
                     int ID = getIDFromTempBoard(i,j);
                     System.out.println("current ID: " + ID);
                     int neighbourID;
@@ -114,7 +115,7 @@ public class Board {
                     }
                     //System.out.println(field.getID());
 
-                    if(tempBoard[i - 1][j - 1] == 0){
+                    if(tempBoard[i - 1][j - 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i - 1, j - 1);
                         System.out.println("current neighbourID: " + neighbourID);
                         for(int a = 0; a < graph.size(); a++){
@@ -123,10 +124,9 @@ public class Board {
                                 break;
                             }
                         }
-                        //System.out.println("current neigbourIndex: " + neighbourIndex);
                         field.Neighbours.add(neighbour);
                     }
-                    if(tempBoard[i - 1][j + 1] == 0){
+                    if(tempBoard[i - 1][j + 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i - 1, j + 1);
                         System.out.println("current neighbourID: " + neighbourID);
 
@@ -141,7 +141,7 @@ public class Board {
                         field.Neighbours.add(neighbour);
                     }
                     if(j-2 >= 0)
-                        if(tempBoard[i][j - 2] == 0){
+                        if(tempBoard[i][j - 2] == BOARD_FIELD){
                             neighbourID = getIDFromTempBoard(i, j - 2);
                             System.out.println("current neighbourID: " + neighbourID);
                             for(int a = 0; a < graph.size(); a++){
@@ -155,7 +155,7 @@ public class Board {
                             field.Neighbours.add(neighbour);
                         }
                     if(j+2 < tempBoardLength)
-                        if(tempBoard[i][j + 2] == 0){
+                        if(tempBoard[i][j + 2] == BOARD_FIELD){
                             neighbourID = getIDFromTempBoard(i, j + 2);
                             System.out.println("current neighbourID: " + neighbourID);
                             for(int a = 0; a < graph.size(); a++){
@@ -168,7 +168,7 @@ public class Board {
                             //System.out.println("current neigbourIndex: " + neighbourIndex);
                             field.Neighbours.add(neighbour);
                         }
-                    if(tempBoard[i + 1][j - 1] == 0){
+                    if(tempBoard[i + 1][j - 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i + 1, j - 1);
                         System.out.println("current neighbourID: " + neighbourID);
 
@@ -182,7 +182,7 @@ public class Board {
                         //System.out.println("current neigbourIndex: " + neighbourIndex);
                         field.Neighbours.add(neighbour);
                     }
-                    if(tempBoard[i + 1][j + 1] == 0){
+                    if(tempBoard[i + 1][j + 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i + 1, j + 1);
                         System.out.println("current neighbourID: " + neighbourID);
                         for(int a = 0; a < graph.size(); a++){
@@ -215,7 +215,7 @@ public class Board {
         }
         int colCounter;
         for(colCounter = 0; colCounter < col; colCounter++){
-            if(tempBoard[row][colCounter] != 1){
+            if(tempBoard[row][colCounter] != NOT_PLAYEABLE_FIELD){
                 ID++;
             }
         }
