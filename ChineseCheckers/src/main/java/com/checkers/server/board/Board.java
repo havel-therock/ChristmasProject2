@@ -13,16 +13,15 @@ public class Board {
     int corners;
     int cornerWidth;
     final static int BOARD_FIELD = 0;
-    final static int NOT_PLAYEABLE_FIELD = -1;
+    final static int NOT_PLAYABLE_FIELD = -1;
 
     public Board(String[] arguments) throws WrongData {
         String message = validateArguments(arguments);
         if ("ArgumentsClear".equals(message)) {
             setBoardFields(arguments);
-            //fillPlayers();
+            fillPlayers();
         } else {
             throw new WrongData(message);
-            //print message to player smth wrong with arguments of the board
         }
     }
 
@@ -33,7 +32,7 @@ public class Board {
         cornerWidth = Integer.parseInt(arguments[5]);
         setFieldsPerRow();
         createTempBoard();
-        displayboard2(tempBoard, tempBoardHeigh, tempBoardLength);
+        //displayboard2(tempBoard, tempBoardHeigh, tempBoardLength);
         createGraph();
     }
 
@@ -72,7 +71,7 @@ public class Board {
     private void prefillTempBoard(int height, int length){
         for(int i=0;i<height;i++){
             for(int j=0;j<length;j++){
-                this.tempBoard[i][j]= NOT_PLAYEABLE_FIELD;
+                this.tempBoard[i][j]= NOT_PLAYABLE_FIELD;
             }
         }
     }
@@ -91,20 +90,18 @@ public class Board {
         }
     }
 
-    // create array of Fields
-    // with value 0 w/o relations yet
-
     private void createGraph(){
+        //prefill arraylist
         graph = new ArrayList<Field>();
         for(int i = 1; i <= sumFields(fieldsPerRow.length); i++){
             graph.add(new Field(i,BOARD_FIELD));
         }
-        System.out.println(graph.size());
+
+        //pick one field
         for(int i = 1; i < tempBoardHeigh - 1; i++){
             for(int j = 1; j < tempBoardLength - 1; j++){
                 if(tempBoard[i][j] == BOARD_FIELD){
                     int ID = getIDFromTempBoard(i,j);
-                    System.out.println("current ID: " + ID);
                     int neighbourID;
                     Field field = null, neighbour = null;
                     for(int a = 0; a < graph.size(); a++){
@@ -113,11 +110,10 @@ public class Board {
                             break;
                         }
                     }
-                    //System.out.println(field.getID());
-
+                    //set relations(neighbourhood) for previously picked field
+                    //dev//body of the IFs' should be in methods
                     if(tempBoard[i - 1][j - 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i - 1, j - 1);
-                        System.out.println("current neighbourID: " + neighbourID);
                         for(int a = 0; a < graph.size(); a++){
                             if(graph.get(a).getID() == neighbourID){
                                 neighbour = graph.get(a);
@@ -128,71 +124,54 @@ public class Board {
                     }
                     if(tempBoard[i - 1][j + 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i - 1, j + 1);
-                        System.out.println("current neighbourID: " + neighbourID);
-
                         for(int a = 0; a < graph.size(); a++){
                             if(graph.get(a).getID() == neighbourID){
                                 neighbour = graph.get(a);
                                 break;
                             }
                         }
-                        //System.out.println("current index: " + index);
-                        //System.out.println("current neigbourIndex: " + neighbourIndex);
                         field.Neighbours.add(neighbour);
                     }
                     if(j-2 >= 0)
                         if(tempBoard[i][j - 2] == BOARD_FIELD){
                             neighbourID = getIDFromTempBoard(i, j - 2);
-                            System.out.println("current neighbourID: " + neighbourID);
                             for(int a = 0; a < graph.size(); a++){
                                 if(graph.get(a).getID() == neighbourID){
                                     neighbour = graph.get(a);
                                     break;
                                 }
                             }
-                            //System.out.println("current index: " + index);
-                            //System.out.println("current neigbourIndex: " + neighbourIndex);
                             field.Neighbours.add(neighbour);
                         }
                     if(j+2 < tempBoardLength)
                         if(tempBoard[i][j + 2] == BOARD_FIELD){
                             neighbourID = getIDFromTempBoard(i, j + 2);
-                            System.out.println("current neighbourID: " + neighbourID);
                             for(int a = 0; a < graph.size(); a++){
                                 if(graph.get(a).getID() == neighbourID){
                                     neighbour = graph.get(a);
                                     break;
                                 }
                             }
-                            //System.out.println("current index: " + index);
-                            //System.out.println("current neigbourIndex: " + neighbourIndex);
                             field.Neighbours.add(neighbour);
                         }
                     if(tempBoard[i + 1][j - 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i + 1, j - 1);
-                        System.out.println("current neighbourID: " + neighbourID);
-
                         for(int a = 0; a < graph.size(); a++){
                             if(graph.get(a).getID() == neighbourID){
                                 neighbour = graph.get(a);
                                 break;
                             }
                         }
-                        //System.out.println("current index: " + index);
-                        //System.out.println("current neigbourIndex: " + neighbourIndex);
                         field.Neighbours.add(neighbour);
                     }
                     if(tempBoard[i + 1][j + 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i + 1, j + 1);
-                        System.out.println("current neighbourID: " + neighbourID);
                         for(int a = 0; a < graph.size(); a++){
                             if(graph.get(a).getID() == neighbourID){
                                 neighbour = graph.get(a);
                                 break;
                             }
                         }
-                        //System.out.println("current index: " + index);
-                        //System.out.println("current neigbourIndex: " + neighbourIndex);
                         field.Neighbours.add(neighbour);
                     }
                 }
@@ -215,13 +194,30 @@ public class Board {
         }
         int colCounter;
         for(colCounter = 0; colCounter < col; colCounter++){
-            if(tempBoard[row][colCounter] != NOT_PLAYEABLE_FIELD){
+            if(tempBoard[row][colCounter] != NOT_PLAYABLE_FIELD){
                 ID++;
             }
         }
         ID++;
         return ID;
     }
+
+    private void fillPlayers() {
+        switch (players){
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 6:
+                break;
+            default:
+                break;
+        }
+    }
+
+
 
     public void displayboard(int[] board){              //  temporary to display board
         for(int i = 0; i < board.length; i++)           //  for development usage
@@ -250,16 +246,20 @@ public class Board {
             corners = Integer.parseInt(arguments[4]);
             cornerWidth  = Integer.parseInt(arguments[5]);
         }catch(NumberFormatException ex){
-            //ex.printStackTrace();
-            return "Please enter some INTEGERS!!!";
-            //message to player you are not giving numbers
-            //return false; ???
+            return "You put some characters in fields where only numbers are allowed";
+        }
+        if(players < 2 || 6 < players){
+            return "Field players must be a number between 2 and 6";
         }
         if(reverseAdding(cornerWidth) < pieces){
-            // message?
             return "Too many pieces for corner size";
         }
-
+        if(pieces < 1){
+            return "You can't play without pieces";
+        }
+        if(cornerWidth < 1){
+            return "Width of the corner should be at least 1";
+        }
         return "ArgumentsClear";
     }
 
@@ -298,7 +298,14 @@ public class Board {
     }
 
     public void executeMove(String move){
+        //if move correct then swap values
+        //swapValues();
+    }
 
+    public void swapValues(Field field1, Field field2){
+        int temp = field1.getValue();
+        field1.setValue(field2.getValue());
+        field2.setValue(temp);
     }
 }
 
