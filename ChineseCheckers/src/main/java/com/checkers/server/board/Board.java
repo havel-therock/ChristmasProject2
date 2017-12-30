@@ -556,20 +556,6 @@ public class Board {
         return i+reverseAdding(i-1);
     }
 
-/*
-    void buildCorner(int baseWidth, int piecesAmount){          //probably to delete
-
-    }
-
-    void createTriangle(){
-
-    }
-
-    void createReverseTriangle(){
-
-    }
-*/
-
     void updateBoard(String move){
 
     }
