@@ -9,12 +9,12 @@ public class GuiGame extends JFrame {
 
     private JLabel example;
     private String[][] GameBoard;
-    private CheckersClient listener;
+    private CheckersClient checkersClient;
 
 
     GuiGame (CheckersClient listener){
         super("Game in progress");
-        this.listener = listener;
+        this.checkersClient = listener;
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -39,7 +39,7 @@ public class GuiGame extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                listener.quit(2);
+                checkersClient.quit(2);
             }
         });
     }
