@@ -1,7 +1,7 @@
-package com.checkers.server;
+package com.checkers.server.board;
 
 public class WrongData extends Exception {
-    String message;
+    public String message;
 
     WrongData(String message){
         this.message = message;

@@ -1,5 +1,6 @@
 package com.checkers.server;
 
+import com.checkers.server.board.*;
 import java.util.ArrayList;
 
 public class Game {
@@ -8,7 +9,7 @@ public class Game {
     String name;
     ArrayList<Player> playerList = new ArrayList<>();
 
-    Game(String[] arguments, Player player) throws WrongData{
+    Game(String[] arguments, Player player) throws WrongData {
         this.name = arguments[1];
         playerList.add(player);
         b = new Board(arguments);
