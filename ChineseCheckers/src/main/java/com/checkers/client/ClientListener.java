@@ -1,129 +1,93 @@
 package com.checkers.client;
 
 import java.io.BufferedReader;
-import java.io.PrintWriter;
+import java.io.IOException;
 
-class ClientListener {
+class ClientListener implements Runnable  {
 
+    private CheckersClient checkersClient;
     private BufferedReader reader;
-    private PrintWriter writer;
     private  GuiSetup setupWindow;
-    private  GuiWelcome welcomeWindow;
-    private  GuiGame gameWindow;
-    private CheckersClient client;
-    private Thread listenerThread;
-    private Listening listener;
-    private boolean[] windowsArray;
+    protected  GuiWelcome welcomeWindow;
+    protected  GuiGame gameWindow;
+    private volatile boolean end;
 
-    ClientListener(CheckersClient client, BufferedReader reader, PrintWriter writer, boolean [] windowsArray, GuiWelcome welcomeWindow){
+    ClientListener(CheckersClient checkersClient, BufferedReader reader, GuiWelcome welcomeWindow,
+                   GuiSetup setupWindow, GuiGame gameWindow){
 
-        this.client = client;
-        this.reader = reader;
-        this.writer = writer;
-        this.windowsArray = windowsArray;
-        this.welcomeWindow = welcomeWindow;
+      this.checkersClient = checkersClient;
+      this.reader = reader;
+      this.welcomeWindow = welcomeWindow;
+      this.setupWindow = setupWindow;
+      this. gameWindow = gameWindow;
 
-        create();
+      this.end = false;
     }
 
-    public void create() {
-        listener = new Listening(this,reader,welcomeWindow,setupWindow,gameWindow);
-        listenerThread = new Thread(listener);
-        listenerThread.start();
+    void setEnd(){
+        this.end = true;
     }
 
-    protected void sendMessage(String message){
-        writer.println(message);
-        writer.flush();
+    public void run() {
+      while(!end){
+          listen();
+      }
     }
 
-    protected void newGameCmd(String line){
+    protected void parseLine(String line){
 
-        client.createBoardWindow();
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        gameWindow.showMessage(line);
-    }
+        switch (line){
+            case "Game already exists":
+                setupWindow.showMessage(line);
+                break;
 
-    protected void joinGameCmd(String line){
+            case "Successfully created a game":
+                checkersClient.newGameCmd(line);
+                break;
 
-        client.createBoardWindow();
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        gameWindow.showMessage(line);
-    }
+            case "Successfully joined the game":
+                checkersClient.joinGameCmd(line);
+                break;
 
-    protected void quit( int number){
+            case "Game does not exist":
+                welcomeWindow.showMessage(line);
+                break;
 
-        if(client.getActiveWindows()==1) {
-            sendMessage("exit");
-            listener.setEnd();
-        }else{
-            client.setActiveWindows(client.getActiveWindows()-1);
-        }
+            case "Server will stop soon":
+                checkersClient.handleServerClosing();
+                break;
+            case "Player removed":
+                break;
+            case "Name valid" :
+                welcomeWindow.setHasName(true);
+                break;
+            case "Name invalid":
+                welcomeWindow.setHasName(false);
+                break;
 
-        if(number == 0) {
-            welcomeWindow.setVisible(false);
-            welcomeWindow.dispose();
-            welcomeWindow = null;
-            windowsArray[0]=false;
-        }else if(number == 1) {
-            setupWindow.setVisible(false);
-            setupWindow.dispose();
-            setupWindow = null;
-            windowsArray[1]=false;
-        }else if (number == 2){
-            gameWindow.setVisible(false);
-            gameWindow.dispose();
-            gameWindow = null;
-            windowsArray[2]=false;
-        }
-
-    }
-
-    protected void handleServerClosing(){
-        sendMessage("ok");
-        showMessage("Connection with server has been lost :/ ");
-        if (windowsArray[2]) {
-            quit(2);
-        }
-        if (windowsArray[1]){
-            quit(1);
-        }
-        if(windowsArray[0]){
-           quit(0);
-        }
-
-        newWelcomeWindow();
-        listener.setEnd();
-    }
-
-    protected void showMessage(String message) {
-
-        if (windowsArray[2]) {
-            gameWindow.showMessage(message);
-        }else if (windowsArray[1]){
-            setupWindow.showMessage(message);
-        }else if(windowsArray[0]){
-            welcomeWindow.showMessage(message);
+            default:
+                if (line.matches("(refreshed).*")) {
+                    welcomeWindow.setList(line);
+                } else {
+                    checkersClient.showMessage(line);
+                }
+                break;
         }
     }
 
-    protected void newWelcomeWindow(){
 
-        client.createGuiWelcome();
+    protected void listen(){
+            try{
+                String serverLine = null;
+                while(serverLine == null) {
+                    serverLine = reader.readLine();
+                    System.out.println(serverLine);
+                    parseLine(serverLine);
+                }
+            }catch(IOException e){
+                e.printStackTrace();
+            }
     }
 
-    protected void setSetupWindow(GuiSetup setupWindow){
-        this.setupWindow = setupWindow;
-    }
-    protected void setGameWindow(GuiGame gameWindow){
-        this.gameWindow = gameWindow;
-    }
+
 }
