@@ -9,6 +9,7 @@ public class GuiGame extends JFrame {
 
     private JLabel example;
     private ClientListener listener;
+    private String[][] GameBoard;
 
 
     GuiGame (ClientListener listener){

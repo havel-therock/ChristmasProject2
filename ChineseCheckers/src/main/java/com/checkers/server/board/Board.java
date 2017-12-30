@@ -1,5 +1,6 @@
 package com.checkers.server.board;
 
+import jdk.nashorn.internal.runtime.regexp.joni.encoding.CharacterType;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.util.ArrayList;
@@ -35,7 +36,8 @@ public class Board {
         if ("ArgumentsClear".equals(message)) {
             setBoardFields(arguments);
             fillPlayers();
-            dis();
+            //dis();
+            displayboard2(tempBoard, tempBoardHeigh, tempBoardLength);
         } else {
             throw new WrongData(message);
         }
@@ -497,8 +499,11 @@ public class Board {
 
     public void displayboard2(int[][] board, int height, int length){    //  temporary to display board
         for(int i = 0; i < height; i++) {
-            for (int j = 0; j < length; j++)                             //  for development usage
-                System.out.print(board[i][j]);                           //  need to be deleted in final version
+            for (int j = 0; j < length; j++)//  for development usage
+                if(board[i][j] == NOT_PLAYABLE_FIELD)
+                    System.out.print(" ");
+                else
+                    System.out.print(board[i][j]);                           //  need to be deleted in final version
             System.out.print("\n");
         }
     }
