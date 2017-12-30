@@ -10,14 +10,14 @@ import java.awt.event.WindowEvent;
 
 public class GuiSetup extends JFrame{
 
-    private ClientListener listener;
+    private CheckersClient listener;
     private JTabbedPane tabs;
     private JButton create,clear;
     private JLabel pieces, players, gameName,corners,cornerWidth;
     private JPanel basics,extras,container;
     private JTextField gameNameTxt, playersTxt,piecesTxt,cornersTxt,cornerWidthTxt;
 
-    GuiSetup(ClientListener listener){
+    GuiSetup(CheckersClient listener){
 
         super("Setup menu");
         this.listener = listener;

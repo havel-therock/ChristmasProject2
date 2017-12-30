@@ -23,10 +23,10 @@ public class GuiWelcome extends JFrame {
     private JScrollPane pane;
     private String lastName;
 
-    private CheckersClient client;
-    private ClientListener listener;
+    private ClientMain client;
+    private CheckersClient checkersClient;
 
-    GuiWelcome(CheckersClient client){
+    GuiWelcome(ClientMain client){
 
         super("Welcome menu");
         this.client=client;
@@ -117,8 +117,8 @@ public class GuiWelcome extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if(listener != null){
-                    listener.quit(0);
+                if(checkersClient != null){
+                    checkersClient.quit(0);
                 }else{
                     GuiWelcome.this.setVisible(false);
                     GuiWelcome.this.dispose();
@@ -154,7 +154,7 @@ public class GuiWelcome extends JFrame {
                         e1.printStackTrace();
                     }
                     if(hasName) {
-                        listener.sendMessage("join;" + list.getSelectedValue());
+                        checkersClient.sendMessage("join;" + list.getSelectedValue());
                     }
                 }
             }
@@ -180,8 +180,8 @@ public class GuiWelcome extends JFrame {
         quit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(listener != null){
-                    listener.quit(0);
+                if(checkersClient != null){
+                    checkersClient.quit(0);
                 }else{
                     GuiWelcome.this.setVisible(false);
                     GuiWelcome.this.dispose();
@@ -209,8 +209,8 @@ public class GuiWelcome extends JFrame {
         JOptionPane.showMessageDialog(GuiWelcome.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
     }
 
-    protected void setListener(ClientListener listener){
-        this.listener=listener;
+    protected void setCheckersClient(CheckersClient checkersClient){
+        this.checkersClient=checkersClient;
     }
 
     protected void setHasName(boolean state){
@@ -219,8 +219,7 @@ public class GuiWelcome extends JFrame {
             showMessage("Your name is already in use, change it!");
         }
     }
-    private void refresh(){
-        listener.sendMessage("refresh");
+    private void refresh(){checkersClient.sendMessage("refresh");
     }
 
     protected void setList(String arguments){
@@ -234,7 +233,7 @@ public class GuiWelcome extends JFrame {
         if(lastName.equals("Anonymous")){
             setHasName(true);
         }else {
-            listener.sendMessage("name;" + lastName);
+            checkersClient.sendMessage("name;" + lastName);
         }
     }
 

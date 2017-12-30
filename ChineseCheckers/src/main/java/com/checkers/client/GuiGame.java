@@ -8,11 +8,11 @@ import java.awt.event.WindowEvent;
 public class GuiGame extends JFrame {
 
     private JLabel example;
-    private ClientListener listener;
     private String[][] GameBoard;
+    private CheckersClient listener;
 
 
-    GuiGame (ClientListener listener){
+    GuiGame (CheckersClient listener){
         super("Game in progress");
         this.listener = listener;
 
