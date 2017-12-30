@@ -1,5 +1,7 @@
 package com.checkers.server.board;
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 import java.util.ArrayList;
 
 //    1
@@ -33,6 +35,7 @@ public class Board {
         if ("ArgumentsClear".equals(message)) {
             setBoardFields(arguments);
             fillPlayers();
+            dis();
         } else {
             throw new WrongData(message);
         }
@@ -45,7 +48,6 @@ public class Board {
         cornerWidth = Integer.parseInt(arguments[5]);
         setFieldsPerRow();
         createTempBoard();
-        //displayboard2(tempBoard, tempBoardHeigh, tempBoardLength);
         createGraph();
     }
 
@@ -214,7 +216,7 @@ public class Board {
         ID++;
         return ID;
     }
-
+//ograniczenie do pieces dodac jakos tak zeby w kazdym rogu byly pionki ulozone rowno nawet jak jest ich mniej
     private void fillPlayers() {
         switch (players){
             case 2:
@@ -222,11 +224,33 @@ public class Board {
                 fillFourth();
                 break;
             case 3:
-                //fillFirst();//set target osobno
+                fillFirst();
+                fillThird();
+                fillFifth();
+                //fillFirst();
+                // FillAll() jak dla przypadku trzeciego ale skasuj potem trzech graczy wtedy
+                //target zostanie zachowany
+                //\/\/\/belows to delete / need to create them to set target for players
+                fillSecond();
+                fillFourth();
+                fillSixth();
+                deletePlayer(2);
+                deletePlayer(4);
+                deletePlayer(6);
                 break;
             case 4:
+                fillSecond();
+                fillThird();
+                fillFifth();
+                fillSixth();
                 break;
             case 6:
+                fillFirst();
+                fillSecond();
+                fillThird();
+                fillFourth();
+                fillFifth();
+                fillSixth();
                 break;
             default:
                 break;
@@ -234,7 +258,7 @@ public class Board {
     }
 
     private void fillFirst(){
-        for(int i = 1; i <= sumFields(cornerWidth); i++){
+        for(int i = 1; i <= pieces; i++){
             for(int j = 0; j < graph.size(); j++){
                 if(graph.get(j).getID() == i){
                     graph.get(j).setPlayer(PLAYER_ONE);
@@ -245,11 +269,115 @@ public class Board {
     }
 
     private void fillSecond(){
+        int startID = sumFields(cornerWidth) + fieldsPerRow[cornerWidth];
+        int seekID = startID;
+        Field levelField, checkerField = null, setterField;
+        for(int a = 0; a < graph.size(); a++){
+            if(graph.get(a).getID() == seekID){
+                setterField = graph.get(a);
+                checkerField = setterField;
+                setterField.setPlayer(PLAYER_TWO);
+                break;
+            }
+        }
+
+        int counter = 1;
+        levelField = checkerField.Neighbours.get(0);
+        int limitSet = 1;
+        while(counter < pieces){
+            //next level of pieces
+            for(int i = 0; i < checkerField.Neighbours.size(); i++){
+                if(checkerField.Neighbours.get(i).getID() < levelField.getID()){
+                    levelField = checkerField.Neighbours.get(i);
+                }
+            }
+            levelField.setPlayer(PLAYER_TWO);
+            counter++;
+            setterField = levelField; // prepare to use setterfield for putting pieces
+            checkerField = setterField;
+            // fill the line of pieces
+            boolean run = true;
+            limitSet++;
+            int limit = limitSet;
+            while(counter < pieces && run && limit > 0){
+                run = false;
+                int size = checkerField.Neighbours.size();
+                for(int i = 0; i < size; i++){
+                    if(checkerField.Neighbours.get(i).getID() > setterField.getID() && checkerField.Neighbours.get(i).getValue() == 0){
+                        setterField = checkerField.Neighbours.get(i);
+                        run = true;
+
+                    }
+                }
+                if(run == true){
+                    setterField.setPlayer(PLAYER_TWO);
+                    checkerField = setterField;
+                    counter++;
+                    limit--;
+                }
+            }
+            setterField = levelField; // prepare to drop down a level of pieces
+            checkerField = setterField;
+        }
+
 
     }
 
+    private void fillThird(){
+        int startID = sumFields(fieldsPerRow.length) - sumFields(cornerWidth);
+        int seekID = startID;
+        Field levelField, checkerField = null, setterField;
+        for(int a = 0; a < graph.size(); a++){
+            if(graph.get(a).getID() == seekID){
+                setterField = graph.get(a);
+                checkerField = setterField;
+                setterField.setPlayer(PLAYER_THREE);
+                break;
+            }
+        }
+
+        int counter = 1;
+        levelField = checkerField.Neighbours.get(0);
+        int limitSet = 1;
+        while(counter < pieces){
+            //next level of pieces
+            for(int i = 0; i < checkerField.Neighbours.size(); i++){
+                if(checkerField.Neighbours.get(i).getID() < levelField.getID()){
+                    levelField = checkerField.Neighbours.get(i);
+                }
+            }
+            levelField.setPlayer(PLAYER_THREE);
+            counter++;
+            setterField = levelField; // prepare to use setterfield for putting pieces
+            checkerField = setterField;
+            // fill the line of pieces
+            boolean run = true;
+            limitSet++;
+            int limit = limitSet;
+            while(counter < pieces && run && limit > 0){
+                run = false;
+                int size = checkerField.Neighbours.size();
+                for(int i = 0; i < size; i++){
+                    if(checkerField.Neighbours.get(i).getID() > setterField.getID() && checkerField.Neighbours.get(i).getValue() == 0){
+                        setterField = checkerField.Neighbours.get(i);
+                        run = true;
+
+                    }
+                }
+                if(run == true){
+                    setterField.setPlayer(PLAYER_THREE);
+                    checkerField = setterField;
+                    counter++;
+                    limit--;
+                }
+            }
+            setterField = levelField; // prepare to drop down a level of pieces
+            checkerField = setterField;
+        }
+    }
+
     private void fillFourth(){
-        for(int i = sumFields(fieldsPerRow.length); i > sumFields(fieldsPerRow.length) - sumFields(cornerWidth); i--){
+        for(int i = sumFields(fieldsPerRow.length); i > sumFields(fieldsPerRow.length) - pieces; i--){
             for(int j = 0; j < graph.size(); j++){
                 if(graph.get(j).getID() == i){
                     graph.get(j).setPlayer(PLAYER_FOUR);
@@ -259,12 +387,104 @@ public class Board {
         }
     }
 
+    private void fillFifth(){
+        int startID = sumFields(fieldsPerRow.length) - sumFields(cornerWidth) - fieldsPerRow[cornerWidth] + 1;
+        int seekID = startID;
+        Field levelField, checkerField = null, setterField;
+        for(int a = 0; a < graph.size(); a++){
+            if(graph.get(a).getID() == seekID){
+                setterField = graph.get(a);
+                checkerField = setterField;
+                setterField.setPlayer(PLAYER_FIVE);
+                break;
+            }
+        }
+
+        int counter = 1;
+        levelField = checkerField.Neighbours.get(0);
+        int limitSet = 1;
+        while(counter < pieces){
+            //next level of pieces
+            for(int i = 0; i < checkerField.Neighbours.size(); i++){
+                if(checkerField.Neighbours.get(i).getID() > levelField.getID()){
+                    levelField = checkerField.Neighbours.get(i);
+                }
+            }
+            levelField.setPlayer(PLAYER_FIVE);
+            counter++;
+            setterField = levelField; // prepare to use setterfield for putting pieces
+            checkerField = setterField;
+            // fill the line of pieces
+            boolean run = true;
+            limitSet++;
+            int limit = limitSet;
+            while(counter < pieces && run && limit > 0){
+                run = false;
+                int size = checkerField.Neighbours.size();
+                for(int i = 0; i < size; i++){
+                    if(checkerField.Neighbours.get(i).getID() < setterField.getID() && checkerField.Neighbours.get(i).getValue() == 0){
+                        setterField = checkerField.Neighbours.get(i);
+                        run = true;
+
+                    }
+                }
+                if(run == true){
+                    setterField.setPlayer(PLAYER_FIVE);
+                    checkerField = setterField;
+                    counter++;
+                    limit--;
+                }
+            }
+            setterField = levelField; // prepare to drop down a level of pieces
+            checkerField = setterField;
+        }
+
+    }
+
     private void fillSixth(){
         int startID = sumFields(cornerWidth) + 1;
-        for(int i = cornerWidth; i > 0; i--){
-            for(int j = cornerWidth; j > 0; j--){
-
+        int seekID = startID;
+        Field levelField, checkerField = null, setterField;
+        for(int a = 0; a < graph.size(); a++){
+            if(graph.get(a).getID() == seekID){
+                setterField = graph.get(a);
+                checkerField = setterField;
+                setterField.setPlayer(PLAYER_SIX);
+                break;
             }
+        }
+
+        int counter = 1;
+        levelField = checkerField.Neighbours.get(0);
+        while(counter < pieces){
+            //next level of pieces
+            for(int i = 0; i < checkerField.Neighbours.size(); i++){
+                if(checkerField.Neighbours.get(i).getID() > levelField.getID()){
+                    levelField = checkerField.Neighbours.get(i);
+                }
+            }
+            levelField.setPlayer(PLAYER_SIX);
+            counter++;
+            setterField = levelField; // prepare to use setterfield for putting pieces
+            checkerField = setterField;
+            // fill the line of pieces
+            boolean run = true;
+            while(counter < pieces && run){
+                run = false;
+                int size = checkerField.Neighbours.size();
+                for(int i = 0; i < size; i++){
+                    if(checkerField.Neighbours.get(i).getID() < setterField.getID() && checkerField.Neighbours.get(i).getValue() == 0){
+                        setterField = checkerField.Neighbours.get(i);
+                        setterField.setPlayer(PLAYER_SIX);
+                        checkerField = setterField;
+                        counter++;
+                        run = true;
+                        break;
+                    }
+                }
+            }
+            setterField = levelField; // prepare to drop down a level of pieces
+            checkerField = setterField;
         }
     }
 
@@ -284,8 +504,18 @@ public class Board {
     }
 
     public void dis(){
-        for(int i = 0; i < graph.size(); i++){
-            System.out.print(graph.get(i).getValue());
+        int counterID = 1;
+        for(int i = 0; i < fieldsPerRow.length; i++){
+            for(int j = 0; j < fieldsPerRow[i]; j++){
+                for(int a = 0; a < graph.size(); a++){
+                    if(graph.get(a).getID() == counterID){
+                        System.out.print(+ graph.get(a).getValue() + " ");
+                        counterID++;
+                        break;
+                    }
+                }
+            }
+            System.out.print("\n");
         }
     }
 
@@ -307,15 +537,16 @@ public class Board {
         if(players < 2 || 6 < players){
             return "Field players must be a number between 2 and 6";
         }
-        if(reverseAdding(cornerWidth) < pieces){
-            return "Too many pieces for corner size";
+        if(cornerWidth < 1){
+            return "Width of the corner should be at least 1";
         }
         if(pieces < 1){
             return "You can't play without pieces";
         }
-        if(cornerWidth < 1){
-            return "Width of the corner should be at least 1";
+        if(reverseAdding(cornerWidth) < pieces){
+            return "Too many pieces for corner size";
         }
+
         return "ArgumentsClear";
     }
 
@@ -350,6 +581,11 @@ public class Board {
 
 
     public void deletePlayer(int number){
+        for(int i = 0; i < graph.size(); i++){
+            if(graph.get(i).getValue() == number){
+                graph.get(i).setValue(BOARD_FIELD);
+            }
+        }
 
     }
 
