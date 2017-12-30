@@ -15,12 +15,13 @@ class ClientListener {
     private Listening listener;
     private boolean[] windowsArray;
 
-    ClientListener(CheckersClient client, BufferedReader reader, PrintWriter writer, boolean [] windowsArray){
+    ClientListener(CheckersClient client, BufferedReader reader, PrintWriter writer, boolean [] windowsArray, GuiWelcome welcomeWindow){
 
         this.client = client;
         this.reader = reader;
         this.writer = writer;
         this.windowsArray = windowsArray;
+        this.welcomeWindow = welcomeWindow;
 
         create();
     }
@@ -115,13 +116,10 @@ class ClientListener {
     }
 
     protected void newWelcomeWindow(){
+
         client.createGuiWelcome();
-
     }
 
-    protected void setWelcomeWindow(GuiWelcome welcomeWindow){
-        this.welcomeWindow = welcomeWindow;
-    }
     protected void setSetupWindow(GuiSetup setupWindow){
         this.setupWindow = setupWindow;
     }

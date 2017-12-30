@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -31,6 +32,9 @@ public class ServerListener implements Runnable{
             System.out.println("Server working...");
             catchNewClient();
 
+        } catch ( BindException e){
+            System.out.println("Cannot create two servers on the sam socket");
+            return;
         } catch (IOException ex) {
             ex.printStackTrace();
             System.out.println("Server failed while booting");

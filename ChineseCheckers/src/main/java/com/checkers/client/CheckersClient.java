@@ -1,11 +1,8 @@
 package com.checkers.client;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
 public class CheckersClient{
 
@@ -34,23 +31,41 @@ public class CheckersClient{
 
         try{
 
-            socket = new Socket(hostName, 4444);
+            socket = openSocket(hostName, 4444);
+
             InputStreamReader inStream = new InputStreamReader(socket.getInputStream());
             reader = new BufferedReader(inStream);
             writer = new PrintWriter(socket.getOutputStream());
 
-            listener = new ClientListener(this,reader,writer,windowsArray);
+            listener = new ClientListener(this,reader,writer,windowsArray,welcomeWindow);
 
             welcomeWindow.setListener(listener);
-            listener.setWelcomeWindow(welcomeWindow);
 
             System.out.println("Successfully connected to server on ip: "+ hostName);
             return true;
 
-        }catch(IOException e){
-
+        } catch (IOException e) {
             System.out.println("Failed while connecting to server");
             return false;
+        }catch (Exception ex) {
+            System.out.println ("Failed while connecting to server");
+            return false;
+        }
+    }
+
+    private Socket openSocket(String hostname,int port) throws Exception{
+        Socket socket;
+        try
+        {
+            SocketAddress socketAddress = new InetSocketAddress(hostname, port);
+
+            socket = new Socket();
+            socket.connect(socketAddress, 3000);
+            return socket;
+        }
+        catch (SocketTimeoutException exc)
+        {
+            throw exc;
         }
     }
 

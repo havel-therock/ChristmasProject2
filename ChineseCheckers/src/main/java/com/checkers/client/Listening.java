@@ -58,9 +58,19 @@ class Listening  implements Runnable  {
                 break;
             case "Player removed":
                 break;
+            case "Name valid" :
+                welcomeWindow.setHasName(true);
+                break;
+            case "Name invalid":
+                welcomeWindow.setHasName(false);
+                break;
 
             default:
-                clientListener.showMessage(line);
+                if (line.matches("(refreshed).*")) {
+                    welcomeWindow.setList(line);
+                } else {
+                    clientListener.showMessage(line);
+                }
                 break;
         }
     }

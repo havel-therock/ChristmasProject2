@@ -1,35 +1,35 @@
 package com.checkers.server;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Player {
     ArrayList<Game> gameList;
     volatile boolean connected;
-    boolean ifActive; // True if it is a players turn
-    int number; // number of your team (pieces)
+    boolean ifActive;
+    int number;
     BufferedReader reader;
     PrintWriter writer;
     String idGame;
-    String userLine;
+    String name;
     PlayerListener playerListener;
     Thread listenerThread;
 
     Player(BufferedReader reader, PrintWriter writer, ArrayList<Game> gameList){
         idGame = null;
-        this.gameList = gameList;
         ifActive = false;
+        connected=true;
         number = 0;
+
+        this.name = "Anonymous";
+        this.gameList = gameList;
         this.reader = reader;
         this.writer = writer;
-        connected=true;
 
         playerListener = new PlayerListener(this);
         listenerThread = new Thread(playerListener);
         listenerThread.start();
-
     }
 
     void parseLine(String line){
@@ -50,6 +50,12 @@ public class Player {
 
             case "move":
                 moveCmd(arguments);
+                break;
+            case "name":
+                nameCmd(arguments[1]);
+                break;
+            case "refresh":
+                refreshCmd();
                 break;
 
             default:
@@ -84,8 +90,6 @@ public class Player {
             }catch (WrongData ex){
                 writeToPlayer(ex.message);
             }
-
-
         }
     }
 
@@ -131,6 +135,29 @@ public class Player {
         }
     }
 
+    void nameCmd(String name){
+        if(name.equals("Anonymous")){
+            writeToPlayer("Name valid");
+            return;
+        }
+        for (Game currentG : gameList) {
+            for(Player currentP : currentG.playerList){
+                if(currentP.name.equals(name)){
+                    writeToPlayer("Name invalid");
+                    return;
+                }
+            }
+        }
+        writeToPlayer("Name valid");
+        this.name = name;
+    }
 
-
+    void refreshCmd(){
+        String tmp;
+        tmp = "refreshed";
+        for (Game current: gameList) {
+            tmp=tmp+";"+current.getName();
+        }
+        writeToPlayer(tmp);
+    }
 }

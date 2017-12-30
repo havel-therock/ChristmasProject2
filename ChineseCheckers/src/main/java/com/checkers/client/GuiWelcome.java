@@ -7,26 +7,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+
 public class GuiWelcome extends JFrame {
 
-    private JButton newGame;
-    private JButton joinGame;
-    private JButton info;
-    private JButton quit;
-    private JButton ip;
-    private JTextField gameText;
-    private JTextField ipText;
-    private JPanel bodyContainer;
-    private JPanel container;
+    private JButton newGame,info,ip,joinGame,quit,name;
+    private JTextField ipText,nameText;
+    private JPanel bodyContainer,container;
     private JLabel welcome;
     private GridBagConstraints constraints;
     private String message;
     private boolean isConnected;
-
+    private boolean hasName;
+    private JList<String> list;
+    private DefaultListModel model;
+    private JScrollPane pane;
+    private String lastName;
 
     private CheckersClient client;
     private ClientListener listener;
-
 
     GuiWelcome(CheckersClient client){
 
@@ -36,20 +34,22 @@ public class GuiWelcome extends JFrame {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         message = " Chinese Checkers \n Kacper Szatan i Piotr Borowczyk";
         isConnected = false;
+        hasName=false;
 
         createComponents();
         setContainer();
         addComponents();
         addListeners();
 
-        setSize(300, 400);
-        setLocation(400,400);
+        setSize(400, 700);
+        setLocation(400,200);
 
     }
 
 
 
     private void setContainer(){
+
         add(container);
         container.setBorder(new EmptyBorder(10,10,10,10));
         container.setLayout(new GridBagLayout());
@@ -59,17 +59,23 @@ public class GuiWelcome extends JFrame {
     }
 
     private void createComponents(){
+
         container = new JPanel();
         bodyContainer = new JPanel();
         welcome = new JLabel("Chinese Checkers");
+        name = new JButton("Set your name: ");
         welcome.setFont(new Font("Comic Sans MS", Font.PLAIN | Font.BOLD, 30));
         newGame = new JButton("New Game");
         joinGame = new JButton("Join Game");
         info = new JButton("Info");
         quit = new JButton("Exit");
-        ip = new JButton("Enter ip and press to connect:");
+        ip = new JButton("Connect and refresh:");
         ipText = new JTextField("127.0.0.1");
-        gameText = new JTextField("");
+        nameText = new JTextField("");
+        model = new DefaultListModel();
+        list = new JList<>(model);
+        pane = new JScrollPane(list);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     private void addComponents(){
@@ -90,12 +96,19 @@ public class GuiWelcome extends JFrame {
 
         bodyContainer.add(ip,constraints);
         bodyContainer.add(ipText,constraints);
-        bodyContainer.add(newGame,constraints);
-        bodyContainer.add(joinGame,constraints);
-        bodyContainer.add(gameText,constraints);
-        bodyContainer.add(info,constraints);
-        bodyContainer.add(quit,constraints);
+        bodyContainer.add(name,constraints);
+        bodyContainer.add(nameText,constraints);
 
+        constraints.insets= new Insets(25,0,0,0);
+        bodyContainer.add(newGame,constraints);
+        constraints.insets= new Insets(0,0,0,0);
+        bodyContainer.add(joinGame,constraints);
+        bodyContainer.add(pane,constraints);
+
+        constraints.insets= new Insets(25,0,0,0);
+        bodyContainer.add(info,constraints);
+        constraints.insets= new Insets(0,0,0,0);
+        bodyContainer.add(quit,constraints);
 
     }
 
@@ -116,8 +129,16 @@ public class GuiWelcome extends JFrame {
         newGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(isConnected) {
-                    client.createGuiSetup();
+                if(isConnected&&hasName) {
+                    checkName();
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    if(hasName) {
+                        client.createGuiSetup();
+                    }
                 }
             }
         });
@@ -125,9 +146,15 @@ public class GuiWelcome extends JFrame {
         joinGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(isConnected) {
-                    if(!(gameText.getText().equals(""))&&gameText.getText().length()<10){
-                        listener.sendMessage("join;" + gameText.getText());
+                if(isConnected&&hasName) {
+                    checkName();
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    if(hasName) {
+                        listener.sendMessage("join;" + list.getSelectedValue());
                     }
                 }
             }
@@ -137,6 +164,16 @@ public class GuiWelcome extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(GuiWelcome.this , message,"Info",JOptionPane.PLAIN_MESSAGE);
+            }
+        });
+
+        name.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                lastName = nameText.getText();
+                if (!hasName) {
+                   checkName();
+                }
             }
         });
 
@@ -161,6 +198,9 @@ public class GuiWelcome extends JFrame {
                         ipText.setText("Connected");
                     }
                 }
+                if(isConnected){
+                    refresh();
+                }
             }
         });
     }
@@ -173,12 +213,28 @@ public class GuiWelcome extends JFrame {
         this.listener=listener;
     }
 
-    protected void setConnected(boolean state){
-        this.isConnected = state;
-        if (this.isConnected){
-            ip.setText("Connected");
-        }else{
-            ip.setText("Not connected");
+    protected void setHasName(boolean state){
+        this.hasName = state;
+        if(!state) {
+            showMessage("Your name is already in use, change it!");
+        }
+    }
+    private void refresh(){
+        listener.sendMessage("refresh");
+    }
+
+    protected void setList(String arguments){
+        model.removeAllElements();
+        String[] tmp = arguments.split(";");
+        for(int i=1;i<tmp.length;i++){
+            model.addElement(tmp[i]);
+        }
+    }
+    private void checkName(){
+        if(lastName.equals("Anonymous")){
+            setHasName(true);
+        }else {
+            listener.sendMessage("name;" + lastName);
         }
     }
 

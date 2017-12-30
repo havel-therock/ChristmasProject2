@@ -45,7 +45,7 @@ public class GuiServer extends JFrame {
         panel = new JPanel();
         ip = new JTextPane();
         quit = new JButton("exit");
-        connect = new JButton("connect");
+        connect = new JButton("start server");
     }
 
     void addComponents(){
@@ -94,36 +94,34 @@ public class GuiServer extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(server.serverListener == null){
                     server.createListener();
+                    connect.setText("server working");
                 }
             }
         });
     }
 
-    protected void showMessage(String message){
-        JOptionPane.showMessageDialog(GuiServer.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
-    }
-
     private void exit(){
 
         if(server.serverListener != null) {
+            if (server.listenerThread.isAlive()) {
+                try {
+                    server.serverListener.mainSocket.close();
+                    server.listenerThread.interrupt();
+                    server.listenerThread.join();
+                } catch (IOException e1) {
+                    System.out.println("cannot close server");
+                } catch (InterruptedException ex) {
+                    System.out.println("cannot close server");
+                }
 
-            try {
-                server.serverListener.mainSocket.close();
-                server.listenerThread.interrupt();
-                server.listenerThread.join();
-            } catch (IOException e1) {
-                System.out.println("cannot close server");
-            }catch ( InterruptedException ex){
-                System.out.println("cannot close server");
-            }
-
-            for (Player current : server.playerList) {
+                for (Player current : server.playerList) {
                     current.writeToPlayer("Server will stop soon");
                     current.connected = false;
-                try {
-                    current.listenerThread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    try {
+                        current.listenerThread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -143,6 +141,10 @@ public class GuiServer extends JFrame {
         }catch(IOException ex){
             ip.setText("Unknown ip address");
         }
+    }
+
+    protected void showMessage(String message){
+        JOptionPane.showMessageDialog(GuiServer.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
     }
 }
 

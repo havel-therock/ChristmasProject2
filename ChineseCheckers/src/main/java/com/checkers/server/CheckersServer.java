@@ -1,7 +1,5 @@
 package com.checkers.server;
 
-
-
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -15,9 +13,21 @@ class CheckersServer {
     ArrayList<Player> playerList = new ArrayList<>();
     ArrayList<Game> gameList = new ArrayList<Game>();
 
-    public static void main(String[] args){
-        CheckersServer a = new CheckersServer();
-        a.createGui();
+    private volatile static CheckersServer instance;
+
+    public static CheckersServer getInstance(){
+        if(instance == null){
+            synchronized (CheckersServer.class){
+                if(instance == null){
+                    instance = new CheckersServer();
+                }
+            }
+        }
+        return instance;
+    }
+
+    CheckersServer(){
+        createGui();
     }
 
     void createGui(){
@@ -37,8 +47,5 @@ class CheckersServer {
         serverListener = new ServerListener(playerList,gameList);
         listenerThread = new Thread (serverListener);
         listenerThread.start();
-
     }
-
-
 }

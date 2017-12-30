@@ -1,7 +1,7 @@
 package com.checkers.client;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,9 +11,8 @@ import java.awt.event.WindowEvent;
 public class GuiSetup extends JFrame{
 
     private ClientListener listener;
-    private JTabbedPane tabbs;
-    private JButton create;
-    private JButton clear;
+    private JTabbedPane tabs;
+    private JButton create,clear;
     private JLabel pieces, players, gameName,corners,cornerWidth;
     private JPanel basics,extras,container;
     private JTextField gameNameTxt, playersTxt,piecesTxt,cornersTxt,cornerWidthTxt;
@@ -37,7 +36,7 @@ public class GuiSetup extends JFrame{
 
     private void createComponents(){
         container = new JPanel();
-        tabbs = new JTabbedPane();
+        tabs = new JTabbedPane();
         basics = new JPanel();
         extras = new JPanel();
         create = new JButton("Play!");
@@ -46,11 +45,11 @@ public class GuiSetup extends JFrame{
         players = new JLabel("Number of players: ");
         gameName = new JLabel("Name of the game: ");
         corners = new JLabel("Number of corners: ");
-        cornerWidth = new JLabel("Number of corners: ");
+        cornerWidth = new JLabel("Width of corner: ");
         gameNameTxt = new JTextField();
         playersTxt = new JTextField("3");
         piecesTxt = new JTextField("10");
-        cornersTxt = new JTextField("6");
+        cornersTxt = new JTextField("6 (Premium users only)");
         cornerWidthTxt = new JTextField("4");
     }
 
@@ -75,17 +74,21 @@ public class GuiSetup extends JFrame{
 
         add(container);
         container.setBorder(new EmptyBorder(5,5,5,5));
-        container.add(tabbs);
-        tabbs.addTab("Setup", null, basics, "Basic game setup");
-        tabbs.addTab("Extras", null, extras, "Extra game options");
+        container.add(tabs);
+        tabs.addTab("Setup", null, basics, "Basic game setup");
+        tabs.addTab("Extras", null, extras, "Extra game options");
 
-        basics.setPreferredSize(new Dimension(300, 150));
-        container.setPreferredSize(new Dimension(350,200));
+        basics.setPreferredSize(new Dimension(350, 200));
+        container.setPreferredSize(new Dimension(400,260));
+
+        cornersTxt.setEditable(false);
+        cornersTxt.setBorder(new EtchedBorder());
+        cornersTxt.setBackground(Color.WHITE);
     }
 
     private String parseData(){
         String tmp = gameNameTxt.getText()+";"+playersTxt.getText()+";"+
-                piecesTxt.getText()+";"+cornersTxt.getText()+";"+cornerWidthTxt.getText();
+                piecesTxt.getText()+";"+"6"+";"+cornerWidthTxt.getText();
         return tmp;
     }
 
