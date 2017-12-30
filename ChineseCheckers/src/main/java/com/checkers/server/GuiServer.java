@@ -15,6 +15,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.net.*;
 import java.io.*;
+import java.util.Enumeration;
 
 public class GuiServer extends JFrame {
 
@@ -148,10 +149,32 @@ public class GuiServer extends JFrame {
     private void setIp(){
 
         try {
-            ip.setText("Server ip is: \n"+Inet4Address.getLocalHost().getHostAddress());
-        } catch (UnknownHostException e) {
+            ip.setText("Server ip is: \n"+ getNetworkIp());
+        } catch (SocketException e) {
             ip.setText("Unknown server adress");
         }
+
+    }
+
+    private String getNetworkIp() throws SocketException{
+        Enumeration en = NetworkInterface.getNetworkInterfaces();
+        while(en.hasMoreElements()){
+            NetworkInterface ni=(NetworkInterface) en.nextElement();
+            Enumeration ee = ni.getInetAddresses();
+            while(ee.hasMoreElements()) {
+                InetAddress ia= (InetAddress) ee.nextElement();
+                try {
+                    String ipa1 = ia.getHostAddress();
+                    String ipa2 = ipa1.substring(0, 3);
+                    int ipa = Integer.parseInt(ipa2);
+                    if(ipa >= 192 && ipa <= 223)
+                        return ia.getHostAddress();
+                }catch(NumberFormatException e){
+                }
+
+            }
+        }
+        return null;
     }
 
     protected void showMessage(String message){
