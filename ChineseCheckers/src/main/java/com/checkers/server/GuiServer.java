@@ -130,6 +130,8 @@ public class GuiServer extends JFrame {
 
     }
 
+    /*
+
     public void setIp() {
         try{
         URL myIp = new URL("http://checkip.amazonaws.com");
@@ -140,6 +142,15 @@ public class GuiServer extends JFrame {
             ip.setText("Unknown ip address");
         }catch(IOException ex){
             ip.setText("Unknown ip address");
+        }
+    }
+*/
+    private void setIp(){
+
+        try {
+            ip.setText("Server ip is: \n"+Inet4Address.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+            ip.setText("Unknown server adress");
         }
     }
 

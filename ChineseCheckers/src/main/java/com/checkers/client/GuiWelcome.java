@@ -170,9 +170,9 @@ public class GuiWelcome extends JFrame {
         name.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                lastName = nameText.getText();
-                if (!hasName) {
-                   checkName();
+                if(isConnected) {
+                    lastName = nameText.getText();
+                    checkName();
                 }
             }
         });
