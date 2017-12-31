@@ -104,7 +104,12 @@ public class GuiSetup extends JFrame{
         create.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                checkersClient.sendMessage("newg;"+parseData());
+                if(isStringLegit(gameNameTxt.getText())) {
+                    checkersClient.sendMessage("newg;" + parseData());
+                }else{
+                    showMessage("Game name contains forbidden characters :(");
+                    gameNameTxt.setText("");
+                }
             }
         });
 
@@ -123,5 +128,16 @@ public class GuiSetup extends JFrame{
 
     protected void showMessage(String message){
         JOptionPane.showMessageDialog(GuiSetup.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
+    }
+    private boolean isStringLegit(String string){
+        if(string.equals(""))
+            return false;
+
+        String sub = string.substring(0,1);
+        if(string.contains(";")||sub.equals(" ")){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

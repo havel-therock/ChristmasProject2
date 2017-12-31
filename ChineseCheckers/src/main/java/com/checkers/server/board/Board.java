@@ -540,6 +540,9 @@ public class Board {
         if(players < 2 || 6 < players){
             return "Field players must be a number between 2 and 6";
         }
+        if(players == 5){
+            return "You can't play with 5 people";
+        }
         if(cornerWidth < 1){
             return "Width of the corner should be at least 1";
         }

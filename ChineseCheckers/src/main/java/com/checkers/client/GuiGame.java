@@ -1,7 +1,6 @@
 package com.checkers.client;
 
 import com.checkers.server.board.Board;
-import com.sun.xml.internal.ws.util.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +9,9 @@ import java.awt.event.WindowEvent;
 
 public class GuiGame extends JFrame {
 
-    private JLabel example;
+    //private JLabel example;
     private int[][] gameBoard;
+    private ClientBoard board;
     private CheckersClient checkersClient;
 
 
@@ -21,14 +21,16 @@ public class GuiGame extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        createComponents();
-        addComponents();
-        addListeners();
+       // createComponents();
+       // addComponents();
+      //  addListeners();
 
-        setPreferredSize(new Dimension(300,200));
-        setLocation(400,300);
-        pack();
+
+      //  setLocation(400,20);
+       // pack();
+
     }
+
 
     public void setBoard(String[] gameBoard) {
         String gameFieldsString = "";
@@ -47,8 +49,9 @@ public class GuiGame extends JFrame {
             }
             gameFieldsString = gameFieldsString + gameBoard[i+1];
         }
-        System.out.println(gameFieldsString);
+
         length = length*2 - 1;
+        System.out.println(length);
         this.gameBoard = new int[height][length];
         for(int i=0;i<height;i++){
             for(int j=0;j<length;j++){
@@ -72,15 +75,20 @@ public class GuiGame extends JFrame {
                 start = start + 2;
             }
         }
-       // Board.displayboard2(this.gameBoard, height, length);
+        Board.displayboard2(this.gameBoard, height, length);
+        createComponents();
+        addComponents();
+        addListeners();
+        setLocation(400,20);
+        pack();
     }
 
-    void createComponents(){
-        example = new JLabel("example");
+    void createComponents() {
+            board = new ClientBoard(gameBoard);
     }
 
      void addComponents(){
-        add(example);
+        add(board);
     }
 
     void addListeners(){
