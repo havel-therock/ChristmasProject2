@@ -42,7 +42,7 @@ public class GuiWelcome extends JFrame {
         addListeners();
 
         setSize(400, 700);
-        setLocation(400,200);
+        setLocation(400,20);
 
     }
 
@@ -173,6 +173,7 @@ public class GuiWelcome extends JFrame {
                 if(isConnected) {
                     lastName = nameText.getText();
                     checkName();
+
                 }
             }
         });
@@ -215,7 +216,7 @@ public class GuiWelcome extends JFrame {
 
     protected void setHasName(boolean state){
         this.hasName = state;
-        if(!state) {
+        if(!state){
             showMessage("Your name is already in use, change it!");
         }
     }
@@ -230,10 +231,26 @@ public class GuiWelcome extends JFrame {
         }
     }
     private void checkName(){
-        if(lastName.equals("Anonymous")){
-            setHasName(true);
-        }else {
-            checkersClient.sendMessage("name;" + lastName);
+        if(isStringLegit(lastName)) {
+            if (lastName.equals("Anonymous")) {
+                hasName = true;
+            } else {
+                checkersClient.sendMessage("name;" + lastName);
+            }
+        }else{
+            hasName = false;
+            showMessage("Your name contains forbidden characters :(");
+        }
+    }
+    private boolean isStringLegit(String string){
+        if(string.equals(""))
+            return false;
+
+        String sub = string.substring(0,1);
+        if(string.contains(";")||sub.equals(" ")){
+            return false;
+        }else{
+            return true;
         }
     }
 
