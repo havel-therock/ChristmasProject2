@@ -27,7 +27,7 @@ class CheckersClient {
     }
 
     public void create() {
-        clientListener = new ClientListener(this,reader,welcomeWindow,setupWindow,gameWindow);
+        clientListener = new ClientListener(this,reader,welcomeWindow);
         listenerThread = new Thread(clientListener);
         listenerThread.start();
     }
@@ -46,6 +46,7 @@ class CheckersClient {
             e.printStackTrace();
         }
         gameWindow.showMessage(line);
+
     }
 
     protected void joinGameCmd(String line){
@@ -122,8 +123,11 @@ class CheckersClient {
 
     protected void setSetupWindow(GuiSetup setupWindow){
         this.setupWindow = setupWindow;
+        clientListener.setSetupWindow(setupWindow);
     }
     protected void setGameWindow(GuiGame gameWindow){
         this.gameWindow = gameWindow;
+        clientListener.setGameWindow(gameWindow);
     }
+
 }

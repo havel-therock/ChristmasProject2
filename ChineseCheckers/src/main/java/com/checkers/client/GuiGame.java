@@ -1,17 +1,29 @@
 package com.checkers.client;
 
+
+
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class GuiGame extends JFrame {
 
-    private JLabel example;
-    private Board board;
+    private JLabel playerName;
+    private JButton help,send;
+    private JPanel topPanel;
+    private JPanel bottomPanel;
+    private JTextArea textArea;
+    private BoardPanel board;
     private String[][] gameBoard;
     private CheckersClient checkersClient;
-
+    private int edgeSize;
+    private String myColor;
+    private JScrollPane scroll;
 
     GuiGame (CheckersClient listener){
         super("Game in progress");
@@ -19,7 +31,97 @@ public class GuiGame extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
+        setLayout(new BorderLayout(10, 10));
 
+        myColor = "blue";   //przed setBoard
+        setBoard();
+        //board.setMyColor(myColor);
+
+
+
+        setBounds();
+
+        createComponents();
+        addComponents();
+        addListeners();
+
+
+        setLocation(400,20);
+        board.setMaximumSize(new Dimension(edgeSize,edgeSize));
+
+        pack();
+        setVisible(true);
+
+
+    }
+    private void setBounds() {
+        Dimension screenSize;
+        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
+        double minimum = Math.min(width, height);
+        edgeSize = (int) (minimum * 0.7);
+    }
+
+    void createComponents() {
+        help = new JButton("Help");
+        send = new JButton("Send");
+        board = new BoardPanel(gameBoard);
+        topPanel = new JPanel();
+        playerName = new JLabel(myColor);
+        bottomPanel = new JPanel();
+        textArea = new JTextArea(3,50);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setBorder(new TitledBorder("server info:"));
+        scroll = new JScrollPane(textArea);
+        topPanel.setBorder(new TitledBorder(""));
+
+    }
+
+     void addComponents(){
+
+        bottomPanel.add(textArea);
+
+        topPanel.add(help);
+        topPanel.add(playerName);
+        topPanel.add(send);
+
+
+        add(board,BorderLayout.CENTER);
+        add(topPanel,BorderLayout.NORTH);
+        add(bottomPanel,BorderLayout.SOUTH);
+    }
+
+    void addListeners(){
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                checkersClient.quit(2);
+            }
+        });
+        help.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showMessage("Swing to jakiś kurwa żart");
+            }
+        });
+        send.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(board.isMoveReady()){
+                    checkersClient.sendMessage("move;"+board.getCircle(1)+board.getCircle(2));    //move +indeksy pól w tablicy oddzielone ;
+                }else{
+                    showMessage("Please select a valid move (with start and end)");
+                }
+            }
+        });
+    }
+    protected void showMessage(String message){
+        JOptionPane.showMessageDialog(GuiGame.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
+    }
+
+    private void setBoard(){
         gameBoard = new String[17][17];
         for(int i=0;i<17;i++){
             for(int j=0;j<17;j++){
@@ -42,41 +144,9 @@ public class GuiGame extends JFrame {
 
         for(int i=0;i<17;i++){
             for(int j=0;j<17;j++){
-               System.out.print(gameBoard[i][j]+" ");
+                System.out.print(gameBoard[i][j]+" ");
             }
             System.out.println();
         }
-
-
-        createComponents();
-        addComponents();
-        addListeners();
-
-
-        setLocation(400,20);
-        pack();
-
-    }
-
-
-    void createComponents() {
-        board = new Board(gameBoard);
-
-    }
-
-     void addComponents(){
-        add(board);
-    }
-
-    void addListeners(){
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                checkersClient.quit(2);
-            }
-        });
-    }
-    protected void showMessage(String message){
-        JOptionPane.showMessageDialog(GuiGame.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
     }
 }

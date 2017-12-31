@@ -103,7 +103,7 @@ public class ClientMain {
             @Override
             public void run() {
                 gameWindow = new GuiGame(checkersClient);
-                gameWindow.setVisible(true);
+                //gameWindow.setVisible(true);
                 checkersClient.setGameWindow(gameWindow);
                 activeWindows++;
                 closeWindows();

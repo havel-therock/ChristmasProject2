@@ -12,15 +12,11 @@ class ClientListener implements Runnable  {
     protected  GuiGame gameWindow;
     private volatile boolean end;
 
-    ClientListener(CheckersClient checkersClient, BufferedReader reader, GuiWelcome welcomeWindow,
-                   GuiSetup setupWindow, GuiGame gameWindow){
+    ClientListener(CheckersClient checkersClient, BufferedReader reader, GuiWelcome welcomeWindow){
 
       this.checkersClient = checkersClient;
       this.reader = reader;
       this.welcomeWindow = welcomeWindow;
-      this.setupWindow = setupWindow;
-      this. gameWindow = gameWindow;
-
       this.end = false;
     }
 
@@ -89,5 +85,11 @@ class ClientListener implements Runnable  {
             }
     }
 
+    protected void setSetupWindow(GuiSetup setup){
+        this.setupWindow = setup;
+    }
+    protected void setGameWindow(GuiGame game){
+        this.gameWindow = game;
+    }
 
 }
