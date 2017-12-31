@@ -1,8 +1,5 @@
 package com.checkers.server.board;
 
-import jdk.nashorn.internal.runtime.regexp.joni.encoding.CharacterType;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
 import java.util.ArrayList;
 
 //    1
@@ -15,15 +12,15 @@ import java.util.ArrayList;
 public class Board {
     int[] fieldsPerRow;
     int[][] tempBoard;
-    int tempBoardHeigh;
+    int tempBoardHeight;
     int tempBoardLength;
     ArrayList<Field> graph;
     int players;
     int pieces;
     int corners;
     int cornerWidth;
-    final static int BOARD_FIELD = 0;
-    final static int NOT_PLAYABLE_FIELD = -1;
+    public final static int BOARD_FIELD = 0;
+    public final static int NOT_PLAYABLE_FIELD = -1;
     final int PLAYER_ONE = 1;
     final int PLAYER_TWO = 2;
     final int PLAYER_THREE = 3;
@@ -37,7 +34,8 @@ public class Board {
             setBoardFields(arguments);
             fillPlayers();
             //dis();
-            displayboard2(tempBoard, tempBoardHeigh, tempBoardLength);
+            displayboard2(tempBoard, tempBoardHeight, tempBoardLength);
+            System.out.println(getBoard());
         } else {
             throw new WrongData(message);
         }
@@ -78,11 +76,11 @@ public class Board {
     }
 
     private void createTempBoard(){
-        tempBoardHeigh = (cornerWidth*4 + 1) + 2;
+        tempBoardHeight = (cornerWidth*4 + 1) + 2;
         tempBoardLength = ((cornerWidth*3 + 1)*2 - 1) + 2;
-        tempBoard = new int[tempBoardHeigh][tempBoardLength];  //int[rows][columns]
-        prefillTempBoard(tempBoardHeigh, tempBoardLength);
-        fillTempBoard(tempBoardHeigh, tempBoardLength);
+        tempBoard = new int[tempBoardHeight][tempBoardLength];  //int[rows][columns]
+        prefillTempBoard(tempBoardHeight, tempBoardLength);
+        fillTempBoard(tempBoardHeight, tempBoardLength);
     }
 
     private void prefillTempBoard(int height, int length){
@@ -115,7 +113,7 @@ public class Board {
         }
 
         //pick one field
-        for(int i = 1; i < tempBoardHeigh - 1; i++){
+        for(int i = 1; i < tempBoardHeight - 1; i++){
             for(int j = 1; j < tempBoardLength - 1; j++){
                 if(tempBoard[i][j] == BOARD_FIELD){
                     int ID = getIDFromTempBoard(i,j);
@@ -497,7 +495,7 @@ public class Board {
             System.out.println(board[i]);               //  need to be deleted in final version
     }
 
-    public void displayboard2(int[][] board, int height, int length){    //  temporary to display board
+    public static void displayboard2(int[][] board, int height, int length){    //  temporary to display board
         for(int i = 0; i < height; i++) {
             for (int j = 0; j < length; j++)//  for development usage
                 if(board[i][j] == NOT_PLAYABLE_FIELD)
@@ -561,12 +559,26 @@ public class Board {
         return i+reverseAdding(i-1);
     }
 
-    void updateBoard(String move){
-
+    void refreshBoard(String move){
+        String board = "boardMove;";
     }
 
-    String getBoard(){
-        return "board";
+    public String getBoard(){
+        String board = "boardSetUp;";
+        int ID = 1;
+        for(int i = 0; i < fieldsPerRow.length; i++){
+            for(int j = 0; j < fieldsPerRow[i]; j++){
+                for(int a = 0; a < graph.size(); a++){
+                    if(graph.get(a).getID() == ID){
+                        board = board + graph.get(a).getValue() + ",";
+                        ID++;
+                        break;
+                    }
+                }
+            }
+            board = board + ";";
+        }
+        return board;
     }
 
 

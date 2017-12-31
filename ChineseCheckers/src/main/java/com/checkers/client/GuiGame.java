@@ -1,5 +1,8 @@
 package com.checkers.client;
 
+import com.checkers.server.board.Board;
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -8,7 +11,7 @@ import java.awt.event.WindowEvent;
 public class GuiGame extends JFrame {
 
     private JLabel example;
-    private String[][] GameBoard;
+    private int[][] gameBoard;
     private CheckersClient checkersClient;
 
 
@@ -25,6 +28,51 @@ public class GuiGame extends JFrame {
         setPreferredSize(new Dimension(300,200));
         setLocation(400,300);
         pack();
+    }
+
+    public void setBoard(String[] gameBoard) {
+        String gameFieldsString = "";
+        String[] gameFields;
+        int[] gameFieldsInt;
+        int height = (gameBoard.length - 1);
+        int length = 0;
+        int[] fieldsPerRow = new int[height];
+        for(int i = 1; i < gameBoard.length; i++){
+            fieldsPerRow[i - 1] = gameBoard[i].length() - gameBoard[i].replace(",","").length();
+        }
+        for(int i = 0; i < height; i++){
+            //System.out.println("fields per " + i + " row: " + fieldsPerRow[i]);
+            if(fieldsPerRow[i] > length){
+                length = fieldsPerRow[i];
+            }
+            gameFieldsString = gameFieldsString + gameBoard[i+1];
+        }
+        System.out.println(gameFieldsString);
+        length = length*2 - 1;
+        this.gameBoard = new int[height][length];
+        for(int i=0;i<height;i++){
+            for(int j=0;j<length;j++){
+                this.gameBoard[i][j]= Board.NOT_PLAYABLE_FIELD;
+            }
+        }
+
+        gameFields = gameFieldsString.split(",");
+        gameFieldsInt = new int[gameFields.length];
+        for(int i = 0; i < gameFields.length; i++){
+            gameFieldsInt[i] = Integer.parseInt(gameFields[i]);
+        }
+        int fieldId = -1;
+        for(int i = 0; i < height; i++){
+            int fields = fieldsPerRow[i];
+            int verticalCenter = length/2 + 1;
+            int start = verticalCenter - fields;
+            for(int j=0;j<fields;j++){
+                fieldId++;
+                this.gameBoard[i][start] = gameFieldsInt[fieldId];
+                start = start + 2;
+            }
+        }
+       // Board.displayboard2(this.gameBoard, height, length);
     }
 
     void createComponents(){
@@ -45,5 +93,20 @@ public class GuiGame extends JFrame {
     }
     protected void showMessage(String message){
         JOptionPane.showMessageDialog(GuiGame.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
+    }
+
+    void boardCmd(String line){
+
+        String[] arguments = line.split(";");
+        switch (arguments[0]){
+            case "boardSetUp":
+                setBoard(arguments);
+                break;
+            case "boardMove":
+                //moveBoard(arguments);
+                break;
+            default:
+                break;
+        }
     }
 }

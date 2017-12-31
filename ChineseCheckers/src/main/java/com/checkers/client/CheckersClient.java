@@ -46,6 +46,7 @@ class CheckersClient {
             e.printStackTrace();
         }
         gameWindow.showMessage(line);
+        clientListener.setGameBoard(gameWindow);
     }
 
     protected void joinGameCmd(String line){
@@ -57,6 +58,7 @@ class CheckersClient {
             e.printStackTrace();
         }
         gameWindow.showMessage(line);
+        clientListener.setGameBoard(gameWindow);
     }
 
     protected void quit( int number){

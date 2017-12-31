@@ -88,9 +88,11 @@ public class Player {
                 gameList.add(game);
                 this.idGame = game.getName();
                 writeToPlayer("Successfully created a game");
+                writeToPlayer(game.b.getBoard());
             }catch (WrongData ex){
                 writeToPlayer(ex.message);
             }
+
         }
     }
 
@@ -107,6 +109,7 @@ public class Player {
             gameList.get(i).addPlayer(this);
             this.idGame = gameList.get(i).getName();
             writeToPlayer("Successfully joined the game");
+            writeToPlayer(gameList.get(i).b.getBoard());
         }else{
             writeToPlayer("Game does not exist");
         }

@@ -19,9 +19,13 @@ class ClientListener implements Runnable  {
       this.reader = reader;
       this.welcomeWindow = welcomeWindow;
       this.setupWindow = setupWindow;
-      this. gameWindow = gameWindow;
+      this.gameWindow = gameWindow;
 
       this.end = false;
+    }
+
+    public void setGameBoard(GuiGame gameWindow){
+        this.gameWindow = gameWindow;
     }
 
     void setEnd(){
@@ -66,11 +70,13 @@ class ClientListener implements Runnable  {
                 break;
 
             default:
-                if (line.matches("(refreshed).*")) {
-                    welcomeWindow.setList(line);
-                } else {
-                    checkersClient.showMessage(line);
-                }
+                if(line.matches("(board).*")){
+                    this.gameWindow.boardCmd(line);
+                }else if (line.matches("(refreshed).*")) {
+                         welcomeWindow.setList(line);
+                    } else {
+                        checkersClient.showMessage(line);
+                    }
                 break;
         }
     }
