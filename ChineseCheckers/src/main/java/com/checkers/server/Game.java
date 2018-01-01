@@ -35,8 +35,7 @@ public class Game {
     }
     protected void sendMessage(String message){
         for(int i=0;i<playerList.size();i++){
-            Player currentPlayer = (Player) playerList.get(i);
-            currentPlayer.writeToPlayer(message);
+            playerList.get(i).writeToPlayer(message);
         }
     }
 

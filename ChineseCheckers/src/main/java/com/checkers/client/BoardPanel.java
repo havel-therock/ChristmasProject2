@@ -89,7 +89,7 @@ public class BoardPanel extends JPanel {
             case 6:
                 return  Color.magenta;
             default:
-                    return Color.black;
+                return Color.black;
         }
     }
 
@@ -127,6 +127,7 @@ public class BoardPanel extends JPanel {
         }
 
     }
+
     private void addListeners(){
 
         addMouseListener(new MouseAdapter() {
@@ -206,7 +207,16 @@ public class BoardPanel extends JPanel {
     }
 
     protected void move(String move){
-      //zmiana planszy przez serwer
+        String arguments [] = move.split(";");
+        int x1,x2,y1,y2,tmp;
+        x1 = Integer.parseInt(arguments[1]);
+        y1 = Integer.parseInt(arguments[2]);
+        x2 = Integer.parseInt(arguments[3]);
+        y2= Integer.parseInt(arguments[4]);
+        tmp =  gameBoard[x1][y1];
+        gameBoard[x1][y1] = gameBoard [x2][y2];
+        gameBoard [x2][y2] = tmp;
+        repaint();
     }
 
 }

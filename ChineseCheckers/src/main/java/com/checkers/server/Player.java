@@ -50,7 +50,7 @@ public class Player {
                 break;
 
             case "move":
-                moveCmd(arguments);
+                moveCmd(line);
                 break;
             case "name":
                 nameCmd(arguments[1]);
@@ -115,13 +115,15 @@ public class Player {
         }
     }
 
-    private void moveCmd(String[] arguments) {
-        int i;
+    private void moveCmd(String line) {      //parsuj to sobie w planszy i zasadach jak chesz xD
+        int i;                                // line to ten string ktory dostaje od klienta w formacie "move;x;y;x;y"
         for (i = 0; i < gameList.size(); i++) {
             if (gameList.get(i).getName() == idGame) {
-                if (gameList.get(i).r.checkMove(arguments[1])) {
-                    gameList.get(i).b.executeMove(arguments[1]);
-                    gameList.get(i).sendMessage(arguments[1]);
+                if (gameList.get(i).r.checkMove(line)) {
+                    gameList.get(i).b.executeMove(line);
+                    gameList.get(i).sendMessage(line);
+                }else {
+                    writeToPlayer("This move is illegal :( ");
                 }
             }
         }

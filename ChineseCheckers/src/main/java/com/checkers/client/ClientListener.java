@@ -66,13 +66,15 @@ class ClientListener implements Runnable  {
                 break;
 
             default:
-                if(line.matches("(board).*")){
-                    this.gameWindow.boardCmd(line);
-                }else if (line.matches("(refreshed).*")) {
-                         welcomeWindow.setList(line);
-                    } else {
-                        checkersClient.showMessage(line);
-                    }
+                if (line.matches ("(move).*")){
+                    gameWindow.boardCmd(line);
+                } else if(line.matches("(board).*")){
+                    gameWindow.boardCmd(line);
+                } else if (line.matches("(refreshed).*")) {
+                    welcomeWindow.setList(line);
+                } else {
+                    checkersClient.showMessage(line);
+                }
                 break;
         }
     }

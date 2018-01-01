@@ -82,16 +82,7 @@ public class GuiGame extends JFrame {
         pack();
         setVisible(true);
     }
-/*
-    private void setBounds() {
-        Dimension screenSize;
-        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-        double minimum = Math.min(width, height);
-        edgeSize = (int) (minimum * 0.7);
-    }
-*/
+
     void createComponents() {
         help = new JButton("Help");
         send = new JButton("Send");
@@ -156,8 +147,8 @@ public class GuiGame extends JFrame {
             case "boardSetUp":
                 setBoard(arguments);
                 break;
-            case "boardMove":
-                //moveBoard(arguments);
+            case "move":
+                board.move(line);
                 break;
             default:
                 break;
