@@ -11,8 +11,8 @@ import com.checkers.server.board.Board;
 public class BoardPanel extends JPanel {
 
     private int[][] gameBoard;
-    private int maxTiles;
     private int edgeSize;
+    private int maxWidth,maxHeight;
     private String firstCircle, secondCircle;
     private boolean isFirst,isSecond;
 
@@ -33,23 +33,25 @@ public class BoardPanel extends JPanel {
 
         int row =0;
         int col = 0;
-        for(int i = 0; i < gameBoard.length; i++){
-            for(int j = 0; j < maxTiles; j++){
+        for(int i = 0; i < maxHeight; i++){
+            for(int j = 0; j < maxWidth; j++){
                 if(gameBoard[i][j] != Board.NOT_PLAYABLE_FIELD){
                     drawCircle(g,col,row,gameBoard[i][j]);
                     drawSelection(g,i,j,col,row);
                 }
-                col=col+edgeSize/maxTiles;
+                col=col+edgeSize/maxWidth;
             }
             col=0;
-            row=row+edgeSize/maxTiles;
+            row=row+edgeSize/maxHeight;
         }
 
     }
 
     private void setBounds(){
-        this.maxTiles = gameBoard[0].length;
-        System.out.println("length is "+maxTiles);
+        maxWidth = gameBoard[0].length;
+        maxHeight = gameBoard.length;
+
+        System.out.println("length is "+maxWidth+"x"+maxHeight);
 
         Dimension screenSize;
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -65,9 +67,9 @@ public class BoardPanel extends JPanel {
         if(color == Board.BOARD_FIELD) {
             g.setColor(Color.black);
         }
-        g.drawOval(col,row,edgeSize/maxTiles,edgeSize/maxTiles);
+        g.drawOval(col,row,edgeSize/maxWidth,edgeSize/maxWidth);
         g.setColor(selectColor(color));
-        g.fillOval(col,row,edgeSize/maxTiles,edgeSize/maxTiles);
+        g.fillOval(col,row,edgeSize/maxWidth,edgeSize/maxWidth);
     }
     private Color selectColor(int color) {
 
@@ -103,9 +105,9 @@ public class BoardPanel extends JPanel {
             int y = Integer.parseInt(arguments[1]);
             if(x==i&&y==j){
                 g2.setColor(tmp.darker().darker());
-                g2.fillOval(col,row,edgeSize/maxTiles,edgeSize/maxTiles);
+                g2.fillOval(col,row,edgeSize/maxWidth,edgeSize/maxWidth);
                 g2.setColor(Color.black);
-                g2.drawOval(col,row,edgeSize/maxTiles,edgeSize/maxTiles);
+                g2.drawOval(col,row,edgeSize/maxWidth,edgeSize/maxWidth);
                 g2.drawString("Start",col,row-1);
                 System.out.println("first circle"+firstCircle+ "colored");
             }
@@ -116,9 +118,9 @@ public class BoardPanel extends JPanel {
             int y = Integer.parseInt(arguments[1]);
             if(x==i&&y==j){
                 g2.setColor(tmp.brighter().brighter());
-                g2.fillOval(col,row,edgeSize/maxTiles,edgeSize/maxTiles);
+                g2.fillOval(col,row,edgeSize/maxWidth,edgeSize/maxWidth);
                 g2.setColor(Color.black);
-                g2.drawOval(col,row,edgeSize/maxTiles,edgeSize/maxTiles);
+                g2.drawOval(col,row,edgeSize/maxWidth,edgeSize/maxWidth);
                 g2.drawString("End",col,row-1);
                 System.out.println("second circle"+secondCircle+ "colored");
             }
@@ -148,10 +150,10 @@ public class BoardPanel extends JPanel {
         int row =0;
         int col = 0;
 
-        for(int i = 0; i < maxTiles; i++){
-            for(int j = 0; j < maxTiles; j++){
+        for(int i = 0; i < maxHeight; i++){
+            for(int j = 0; j < maxWidth; j++){
                     if (gameBoard[i][j] != Board.NOT_PLAYABLE_FIELD) {
-                        if(y>row&&y<(row+edgeSize/maxTiles) && x>col&&x<(col+edgeSize/maxTiles)){
+                        if(y>row&&y<(row+edgeSize/maxWidth) && x>col&&x<(col+edgeSize/maxWidth)){
                             if(!isFirst){
                                 firstCircle = i+";"+j+";";
                                 isFirst = true;
@@ -180,10 +182,10 @@ public class BoardPanel extends JPanel {
                             return;
                         }
                     }
-                col=col+edgeSize/maxTiles;
+                col=col+edgeSize/maxWidth;
             }
             col=0;
-            row=row+edgeSize/maxTiles;
+            row=row+edgeSize/maxHeight;
         }
     }
 

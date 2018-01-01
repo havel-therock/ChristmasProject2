@@ -20,7 +20,6 @@ public class GuiGame extends JFrame {
     private BoardPanel board;
     private int[][] gameBoard;
     private CheckersClient checkersClient;
-    private int edgeSize;
     private String myColor;
     private JScrollPane scroll;
 
@@ -79,12 +78,11 @@ public class GuiGame extends JFrame {
         addComponents();
         addListeners();
         setLocation(400,20);
-        board.setMaximumSize(new Dimension(edgeSize,edgeSize));
+
         pack();
         setVisible(true);
-        setBounds();
     }
-
+/*
     private void setBounds() {
         Dimension screenSize;
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -93,7 +91,7 @@ public class GuiGame extends JFrame {
         double minimum = Math.min(width, height);
         edgeSize = (int) (minimum * 0.7);
     }
-
+*/
     void createComponents() {
         help = new JButton("Help");
         send = new JButton("Send");
