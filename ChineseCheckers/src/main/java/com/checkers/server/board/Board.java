@@ -27,10 +27,12 @@ public class Board {
     final int PLAYER_FOUR = 4;
     final int PLAYER_FIVE = 5;
     final int PLAYER_SIX = 6;
+    int [] whichCorners;
 
     public Board(String[] arguments) throws WrongData {
         String message = validateArguments(arguments);
         if ("ArgumentsClear".equals(message)) {
+            whichCorners = new int []{0,0,0,0,0,0};
             setBoardFields(arguments);
             fillPlayers();
             //dis();
@@ -222,6 +224,8 @@ public class Board {
             case 2:
                 fillFirst();
                 fillFourth();
+                whichCorners[0]=1;
+                whichCorners[1]=4;
                 break;
             case 3:
                 fillFirst();
@@ -237,12 +241,19 @@ public class Board {
                 deletePlayer(2);
                 deletePlayer(4);
                 deletePlayer(6);
+                whichCorners[0]=1;
+                whichCorners[1]=3;
+                whichCorners[2]=5;
                 break;
             case 4:
                 fillSecond();
                 fillThird();
                 fillFifth();
                 fillSixth();
+                whichCorners[0]=2;
+                whichCorners[1]=3;
+                whichCorners[2]=5;
+                whichCorners[3]=6;
                 break;
             case 6:
                 fillFirst();
@@ -251,6 +262,12 @@ public class Board {
                 fillFourth();
                 fillFifth();
                 fillSixth();
+                whichCorners[0]=1;
+                whichCorners[1]=2;
+                whichCorners[2]=3;
+                whichCorners[3]=4;
+                whichCorners[4]=5;
+                whichCorners[5]=6;
                 break;
             default:
                 break;
@@ -567,7 +584,7 @@ public class Board {
     }
 
     public String getBoard(){
-        String board = "boardSetUp;";
+        String board = "";
         int ID = 1;
         for(int i = 0; i < fieldsPerRow.length; i++){
             for(int j = 0; j < fieldsPerRow[i]; j++){
@@ -604,6 +621,12 @@ public class Board {
         int temp = field1.getValue();
         field1.setValue(field2.getValue());
         field2.setValue(temp);
+    }
+    public int getPlayers(){
+        return players;
+    }
+    public int getWhichCorners(int playerNumber){
+        return whichCorners[playerNumber];
     }
 }
 

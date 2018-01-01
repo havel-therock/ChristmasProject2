@@ -46,14 +46,12 @@ public class ClientMain {
 
         } catch (IOException e) {
             System.out.println("Failed while connecting to server");
-            return false;
-        }catch (Exception ex) {
-            System.out.println ("Failed while connecting to server");
+            welcomeWindow.showMessage("Cannot connect to a server with ip "+hostName);
             return false;
         }
     }
 
-    private Socket openSocket(String hostname,int port) throws Exception{
+    private Socket openSocket(String hostname,int port) throws IOException{
         Socket socket;
         try
         {

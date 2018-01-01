@@ -3,6 +3,7 @@ package com.checkers.client;
 import com.checkers.server.board.Board;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -31,48 +32,9 @@ public class GuiGame extends JFrame {
     }
 
 
-    public void setBoard(String[] gameBoard) {
-        String gameFieldsString = "";
-        String[] gameFields;
-        int[] gameFieldsInt;
-        int height = (gameBoard.length - 1);
-        int length = 0;
-        int[] fieldsPerRow = new int[height];
-        for(int i = 1; i < gameBoard.length; i++){
-            fieldsPerRow[i - 1] = gameBoard[i].length() - gameBoard[i].replace(",","").length();
-        }
-        for(int i = 0; i < height; i++){
-            if(fieldsPerRow[i] > length){
-                length = fieldsPerRow[i];
-            }
-            gameFieldsString = gameFieldsString + gameBoard[i+1];
-        }
+    private void setupBoard(String[] gameBoard) {
 
-        length = length*2 - 1;
-        System.out.println(length);
-        this.gameBoard = new int[height][length];
-        for(int i=0;i<height;i++){
-            for(int j=0;j<length;j++){
-                this.gameBoard[i][j]= Board.NOT_PLAYABLE_FIELD;
-            }
-        }
-
-        gameFields = gameFieldsString.split(",");
-        gameFieldsInt = new int[gameFields.length];
-        for(int i = 0; i < gameFields.length; i++){
-            gameFieldsInt[i] = Integer.parseInt(gameFields[i]);
-        }
-        int fieldId = -1;
-        for(int i = 0; i < height; i++){
-            int fields = fieldsPerRow[i];
-            int verticalCenter = length/2 + 1;
-            int start = verticalCenter - fields;
-            for(int j=0;j<fields;j++){
-                fieldId++;
-                this.gameBoard[i][start] = gameFieldsInt[fieldId];
-                start = start + 2;
-            }
-        }
+        createBoard(gameBoard);
 
         createComponents();
         addComponents();
@@ -83,7 +45,116 @@ public class GuiGame extends JFrame {
         setVisible(true);
     }
 
-    void createComponents() {
+    private void resetBoard(String [] gameBoard){
+        createBoard2(gameBoard);
+       board.repaint();
+    }
+
+    private void createBoard2(String[] gameBoard) {
+        int tmp[][];
+        String gameFieldsString = "";
+        String[] gameFields;
+        int[] gameFieldsInt;
+        int height = (gameBoard.length - 1);
+        int length = 0;
+        int[] fieldsPerRow = new int[height];
+        for (int i = 1; i < gameBoard.length; i++) {
+            fieldsPerRow[i - 1] = gameBoard[i].length() - gameBoard[i].replace(",", "").length();
+        }
+        for (int i = 0; i < height; i++) {
+            if (fieldsPerRow[i] > length) {
+                length = fieldsPerRow[i];
+            }
+            gameFieldsString = gameFieldsString + gameBoard[i + 1];
+        }
+
+        length = length * 2 - 1;
+        System.out.println(length);
+        tmp = new int[height][length];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < length; j++) {
+                tmp[i][j] = Board.NOT_PLAYABLE_FIELD;
+            }
+        }
+
+        gameFields = gameFieldsString.split(",");
+        gameFieldsInt = new int[gameFields.length];
+        for (int i = 0; i < gameFields.length; i++) {
+            gameFieldsInt[i] = Integer.parseInt(gameFields[i]);
+        }
+        int fieldId = -1;
+        for (int i = 0; i < height; i++) {
+            int fields = fieldsPerRow[i];
+            int verticalCenter = length / 2 + 1;
+            int start = verticalCenter - fields;
+            for (int j = 0; j < fields; j++) {
+                fieldId++;
+                tmp[i][start] = gameFieldsInt[fieldId];
+                start = start + 2;
+            }
+        }
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < length; j++) {
+                this.gameBoard[i][j] = tmp[i][j];
+            }
+        }
+    }
+
+    private void createBoard(String[] gameBoard) {
+
+        String gameFieldsString = "";
+        String[] gameFields;
+        int[] gameFieldsInt;
+        int height = (gameBoard.length - 1);
+        int length = 0;
+        int[] fieldsPerRow = new int[height];
+        for (int i = 1; i < gameBoard.length; i++) {
+            fieldsPerRow[i - 1] = gameBoard[i].length() - gameBoard[i].replace(",", "").length();
+        }
+        for (int i = 0; i < height; i++) {
+            if (fieldsPerRow[i] > length) {
+                length = fieldsPerRow[i];
+            }
+            gameFieldsString = gameFieldsString + gameBoard[i + 1];
+        }
+
+        length = length * 2 - 1;
+        System.out.println(length);
+        this.gameBoard = new int[height][length];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < length; j++) {
+                this.gameBoard[i][j] = Board.NOT_PLAYABLE_FIELD;
+            }
+        }
+
+        gameFields = gameFieldsString.split(",");
+        gameFieldsInt = new int[gameFields.length];
+        for (int i = 0; i < gameFields.length; i++) {
+            gameFieldsInt[i] = Integer.parseInt(gameFields[i]);
+        }
+        int fieldId = -1;
+        for (int i = 0; i < height; i++) {
+            int fields = fieldsPerRow[i];
+            int verticalCenter = length / 2 + 1;
+            int start = verticalCenter - fields;
+            for (int j = 0; j < fields; j++) {
+                fieldId++;
+                this.gameBoard[i][start] = gameFieldsInt[fieldId];
+                start = start + 2;
+            }
+        }
+    }
+
+    private void setInfo(String [] arguments){
+        Color tmpColor = board.selectColor(Integer.parseInt(arguments[1]));
+        Font tmp = new Font("Comic Sans MS",Font.BOLD,15);
+        playerName.setFont(tmp);
+        playerName.setForeground(tmpColor);
+        playerName.setText("  Hello "+arguments[2]+", your're playing game: "+arguments[3]+"  ");
+    }
+
+    private void createComponents() {
         help = new JButton("Help");
         send = new JButton("Send");
         board = new BoardPanel(gameBoard);
@@ -98,7 +169,7 @@ public class GuiGame extends JFrame {
         topPanel.setBorder(new TitledBorder(""));
     }
 
-     void addComponents(){
+    private void addComponents(){
 
         bottomPanel.add(textArea);
 
@@ -112,7 +183,7 @@ public class GuiGame extends JFrame {
         add(bottomPanel,BorderLayout.SOUTH);
     }
 
-    void addListeners(){
+    private void addListeners(){
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -122,7 +193,9 @@ public class GuiGame extends JFrame {
         help.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showMessage("Swing to jakiś kurwa żart");
+                showMessage("Select two pieces and click on send button to execute the move; \n" +
+                        "Click again on a selected piece to deselect it and use it again; \n" +
+                        "The first player in the opposite corner wins! ");
             }
         });
         send.addActionListener(new ActionListener() {
@@ -140,18 +213,25 @@ public class GuiGame extends JFrame {
         JOptionPane.showMessageDialog(GuiGame.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
     }
 
-    void boardCmd(String line) {
+    protected void boardCmd(String line) {
 
         String[] arguments = line.split(";");
         switch (arguments[0]) {
             case "boardSetUp":
-                setBoard(arguments);
+                setupBoard(arguments);
                 break;
             case "move":
                 board.move(line);
+                break;
+            case "info":
+                setInfo(arguments);
+                break;
+            case "boardReset":
+                resetBoard(arguments);
                 break;
             default:
                 break;
         }
     }
+
 }

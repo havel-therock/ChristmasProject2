@@ -10,6 +10,7 @@ public class Player {
     volatile boolean connected;
     boolean ifActive;
     int number;
+    int cornerNumber;
     BufferedReader reader;
     PrintWriter writer;
     String idGame;
@@ -23,7 +24,7 @@ public class Player {
         connected=true;
         number = 0;
 
-        this.name = "Anonymous";
+        this.name = "anonymous";
         this.gameList = gameList;
         this.reader = reader;
         this.writer = writer;
@@ -52,11 +53,17 @@ public class Player {
             case "move":
                 moveCmd(line);
                 break;
+
             case "name":
                 nameCmd(arguments[1]);
                 break;
+
             case "refresh":
                 refreshCmd();
+                break;
+
+            case "delete":
+                deleteCmd(arguments[1]);
                 break;
 
             default:
@@ -87,8 +94,11 @@ public class Player {
                 Game game = new Game(arguments, this);
                 gameList.add(game);
                 this.idGame = game.getName();
+                this.number = 0;
+                this.cornerNumber = game.b.getWhichCorners(this.number);
                 writeToPlayer("Successfully created a game");
-                writeToPlayer(game.b.getBoard());
+                writeToPlayer("boardSetUp;"+game.b.getBoard());
+                writeToPlayer("info;"+Integer.toString(this.cornerNumber)+";"+this.name+";"+idGame);
             }catch (WrongData ex){
                 writeToPlayer(ex.message);
             }
@@ -106,10 +116,16 @@ public class Player {
             }
         }
         if(exist){
-            gameList.get(i).addPlayer(this);
-            this.idGame = gameList.get(i).getName();
-            writeToPlayer("Successfully joined the game");
-            writeToPlayer(gameList.get(i).b.getBoard());
+            if(gameList.get(i).addPlayer(this)) {
+                this.idGame = gameList.get(i).getName();
+                this.number = gameList.get(i).getCurrentPlayersNumber()-1;
+                this.cornerNumber = gameList.get(i).getBoard().getWhichCorners(this.number);
+                writeToPlayer("Successfully joined the game");
+                writeToPlayer("boardSetUp;"+gameList.get(i).b.getBoard());
+                writeToPlayer("info;"+Integer.toString(this.cornerNumber)+";"+this.name+";"+idGame);
+            }else{
+                writeToPlayer("This game is full, please select a different game or create a new one");
+            }
         }else{
             writeToPlayer("Game does not exist");
         }
@@ -133,16 +149,25 @@ public class Player {
         int i;
         this.connected=false;
         writeToPlayer("Player removed");
+
         for(i = 0; i < gameList.size(); i++){
-            if(gameList.get(i).getName() == idGame){
-                gameList.get(i).deletePieces(number);
+
+            if(gameList.get(i).getName().equals(idGame)){
+
+                gameList.get(i).deletePieces(this.cornerNumber);
                 gameList.get(i).delete(this);
+
+                for (Player current: gameList.get(i).playerList) {
+                    current.writeToPlayer("Jeden z graczy opuscil gre");
+                    current.writeToPlayer("boardReset;"+gameList.get(i).b.getBoard());
+                }
             }
         }
+
     }
 
     void nameCmd(String name){
-        if(name.equals("Anonymous")){
+        if(name.equals("anonymous")){
             writeToPlayer("Name valid");
             return;
         }
@@ -165,5 +190,17 @@ public class Player {
             tmp=tmp+";"+current.getName();
         }
         writeToPlayer(tmp);
+    }
+    void deleteCmd(String name){
+        for (int i = 0; i < gameList.size(); i++) {
+            if (gameList.get(i).getName().equals(name)) {
+                if(gameList.get(i).getCurrentPlayersNumber()<1){
+                    gameList.remove(i);
+                    refreshCmd();
+                }else{
+                    writeToPlayer("This game is still in use");
+                }
+            }
+        }
     }
 }

@@ -22,8 +22,13 @@ public class Game {
         return name;
     }
 
-    protected void addPlayer(Player player){
-        playerList.add(player);
+    protected boolean addPlayer(Player player){
+        if(playerList.size()<b.getPlayers()) {
+            playerList.add(player);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     protected void delete(Player player){
@@ -37,6 +42,12 @@ public class Game {
         for(int i=0;i<playerList.size();i++){
             playerList.get(i).writeToPlayer(message);
         }
+    }
+    protected int getCurrentPlayersNumber(){
+        return playerList.size();
+    }
+    protected Board getBoard(){
+        return b;
     }
 
 }

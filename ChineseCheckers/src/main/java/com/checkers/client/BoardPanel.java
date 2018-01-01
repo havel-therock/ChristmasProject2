@@ -10,7 +10,7 @@ import com.checkers.server.board.Board;
 
 public class BoardPanel extends JPanel {
 
-    private int[][] gameBoard;
+    protected int[][] gameBoard;
     private int edgeSize;
     private int maxWidth,maxHeight;
     private String firstCircle, secondCircle;
@@ -71,7 +71,7 @@ public class BoardPanel extends JPanel {
         g.setColor(selectColor(color));
         g.fillOval(col,row,edgeSize/maxWidth,edgeSize/maxWidth);
     }
-    private Color selectColor(int color) {
+    protected Color selectColor(int color) {
 
         switch (color){
             case 0:
@@ -81,11 +81,11 @@ public class BoardPanel extends JPanel {
             case 2:
                 return Color.red;
             case 3:
-                return Color.yellow;
+                return Color.cyan;
             case 4:
-                return Color.green;
-            case 5:
                 return Color.orange;
+            case 5:
+                return Color.green;
             case 6:
                 return  Color.magenta;
             default:

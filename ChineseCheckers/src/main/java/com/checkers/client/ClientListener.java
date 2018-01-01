@@ -64,11 +64,16 @@ class ClientListener implements Runnable  {
             case "Name invalid":
                 welcomeWindow.setHasName(false);
                 break;
+            case "This game is still in use":
+                welcomeWindow.showMessage(line);
+                break;
 
             default:
                 if (line.matches ("(move).*")){
                     gameWindow.boardCmd(line);
                 } else if(line.matches("(board).*")){
+                    gameWindow.boardCmd(line);
+                } else if(line.matches("(info).*")){
                     gameWindow.boardCmd(line);
                 } else if (line.matches("(refreshed).*")) {
                     welcomeWindow.setList(line);

@@ -10,12 +10,11 @@ import java.awt.event.WindowEvent;
 
 public class GuiWelcome extends JFrame {
 
-    private JButton newGame,info,ip,joinGame,quit,name;
+    private JButton newGame,info,ip,joinGame,quit,name,delete;
     private JTextField ipText,nameText;
     private JPanel bodyContainer,container;
     private JLabel welcome;
     private GridBagConstraints constraints;
-    private String message;
     private boolean isConnected;
     private boolean hasName;
     private JList<String> list;
@@ -32,7 +31,6 @@ public class GuiWelcome extends JFrame {
         this.client=client;
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        message = " Chinese Checkers \n Kacper Szatan i Piotr Borowczyk";
         isConnected = false;
         hasName=false;
 
@@ -69,6 +67,7 @@ public class GuiWelcome extends JFrame {
         joinGame = new JButton("Join Game");
         info = new JButton("Info");
         quit = new JButton("Exit");
+        delete = new JButton("Delete Game");
         ip = new JButton("Connect and refresh:");
         ipText = new JTextField("127.0.0.1");
         nameText = new JTextField("");
@@ -103,6 +102,7 @@ public class GuiWelcome extends JFrame {
         bodyContainer.add(newGame,constraints);
         constraints.insets= new Insets(0,0,0,0);
         bodyContainer.add(joinGame,constraints);
+        bodyContainer.add(delete,constraints);
         bodyContainer.add(pane,constraints);
 
         constraints.insets= new Insets(25,0,0,0);
@@ -154,7 +154,24 @@ public class GuiWelcome extends JFrame {
                         e1.printStackTrace();
                     }
                     if(hasName) {
-                        checkersClient.sendMessage("join;" + list.getSelectedValue());
+                        if(list.getSelectedValue()!=null) {
+                            checkersClient.sendMessage("join;" + list.getSelectedValue());
+                        }else{
+                            showMessage("Please, select a game");
+                        }
+                    }
+                }
+            }
+        });
+
+        delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(isConnected){
+                    if(list.getSelectedValue()!=null) {
+                        checkersClient.sendMessage("delete;"+list.getSelectedValue());
+                    }else{
+                        showMessage("Please, select a game");
                     }
                 }
             }
@@ -163,6 +180,7 @@ public class GuiWelcome extends JFrame {
         info.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String message = " Chinese Checkers \n Kacper Szatan i Piotr Borowczyk \n\n Tip: For an anonymous user, set your name to \"anonymous\" ";
                 JOptionPane.showMessageDialog(GuiWelcome.this , message,"Info",JOptionPane.PLAIN_MESSAGE);
             }
         });
@@ -217,6 +235,7 @@ public class GuiWelcome extends JFrame {
     protected void setHasName(boolean state){
         this.hasName = state;
         if(!state){
+            nameText.setForeground(Color.red.darker());
             showMessage("Your name is already in use, change it!");
         }
     }
@@ -232,24 +251,28 @@ public class GuiWelcome extends JFrame {
     }
     private void checkName(){
         if(isStringLegit(lastName)) {
-            if (lastName.equals("Anonymous")) {
+            if (lastName.equals("anonymous")) {
                 hasName = true;
             } else {
                 checkersClient.sendMessage("name;" + lastName);
             }
         }else{
             hasName = false;
-            showMessage("Your name contains forbidden characters :(");
         }
     }
     private boolean isStringLegit(String string){
-        if(string.equals(""))
+        if(string.equals("")) {
+            showMessage("Your name is empty :/");
             return false;
+        }
 
         String sub = string.substring(0,1);
         if(string.contains(";")||sub.equals(" ")){
+            nameText.setForeground(Color.red.darker());
+            showMessage("Your name contains ; or starts with a space - change that ;)");
             return false;
         }else{
+            nameText.setForeground(Color.green.darker());
             return true;
         }
     }
