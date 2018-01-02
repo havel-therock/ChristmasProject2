@@ -287,4 +287,10 @@ public class Player {
     protected void setNumber(int i){
         this.number = i;
     }
+    protected int getCornerNumber(){
+        return cornerNumber;
+    }
+    protected int getNumber(){
+        return number;
+    }
 }
