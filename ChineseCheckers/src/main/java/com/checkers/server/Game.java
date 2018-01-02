@@ -80,9 +80,7 @@ public class Game {
     }
 
     protected void setActivePlayer(int i){
-        if(getCurrentPlayersNumber()!=0) {
-            playerList.get(i).setIfActive(true);
-        }
+        playerList.get(i).setIfActive(true);
     }
     protected boolean getIsStarted(){
         return isStarted;

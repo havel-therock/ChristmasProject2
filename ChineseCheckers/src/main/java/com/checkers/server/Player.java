@@ -146,9 +146,7 @@ public class Player {
     private void moveCmd(String line) {
         if(ifActive) {
             if (myGame.r.checkMove(line)) {
-                System.out.println("+++ board before move;"+myGame.b.getBoard());
                 myGame.b.executeMove(line);
-                System.out.println("+++  board after move;"+myGame.b.getBoard());
                 myGame.sendMessage(line);
                 if(isNextPlayer()) {
                     setNextPlayerActive();
@@ -170,15 +168,14 @@ public class Player {
         myGame.setReady(false);
 
         if(myGame.isStarted) {
-            System.out.println("+++ board before deleting"+myGame.b.getBoard());
+
             myGame.deletePieces(this.cornerNumber);
 
             for (Player current : myGame.playerList) {
                 current.writeToPlayer("One of the players has quit!");
                 current.writeToPlayer("boardReset;" + myGame.b.getBoard());
             }
-            System.out.println("--- thats the deletion");
-            System.out.println("+++ board after deleting"+myGame.b.getBoard());
+
             if(ifActive){
                 if(myGame.getCurrentPlayersNumber()==1){
                     myGame.sendMessage("Congratulations, you won!");
@@ -257,10 +254,12 @@ public class Player {
     }
 
      private void setNextPlayerActive(){
-        if(number ==  myGame.getCurrentPlayersNumber()-1){
-            myGame.setActivePlayer(0);
-        }else{
-            myGame.setActivePlayer(number+1);
+        if(isNextPlayer()) {
+            if (number == myGame.getCurrentPlayersNumber() - 1) {
+                myGame.setActivePlayer(0);
+            } else {
+                myGame.setActivePlayer(number + 1);
+            }
         }
          ifActive = false;
      }
