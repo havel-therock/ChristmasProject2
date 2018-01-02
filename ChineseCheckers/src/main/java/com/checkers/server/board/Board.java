@@ -196,6 +196,20 @@ public class Board {
         }
     }
 
+    private int getID(int row, int col){
+        int ID =1;
+        if(row > 0) {
+            ID = sumFields(row - 1);
+        }
+        int colCounter;
+        for(colCounter = 0; colCounter<=col; colCounter++){
+            if(tempBoard[row][colCounter] != Board.NOT_PLAYABLE_FIELD){
+                ID++;
+            }
+        }
+        return ID;
+    }
+
     private int sumFields(int rowsAmount){
         int sum = 0;
         for(int i = 0; i < rowsAmount; i++){
@@ -613,8 +627,22 @@ public class Board {
     }
 
     public void executeMove(String move){
-        //if move correct then swap values
-        //swapValues();
+        String args[] = move.split(";");
+        int i = getID(Integer.parseInt(args[1]),Integer.parseInt(args[2]));
+        int j = getID(Integer.parseInt(args[3]),Integer.parseInt(args[4]));
+
+        Field field1 = null;
+        Field field2 = null;
+
+        for(int a = 0; a < graph.size(); a++){
+            if(graph.get(a).getID() == i){
+                field1 = graph.get(a);
+            }else if(graph.get(a).getID() == j){
+                field2 = graph.get(a);
+            }
+        }
+
+        swapValues(field1,field2);
     }
 
     public void swapValues(Field field1, Field field2){

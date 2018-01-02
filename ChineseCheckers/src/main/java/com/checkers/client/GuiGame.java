@@ -233,6 +233,11 @@ public class GuiGame extends JFrame {
         JOptionPane.showMessageDialog(GuiGame.this , message,"Message",JOptionPane.PLAIN_MESSAGE);
     }
 
+    protected void writeMessage(String line){
+        String tmp =  textArea.getText();
+        textArea.setText(tmp+"\n"+line);
+    }
+
     protected void boardCmd(String line) {
 
         String[] arguments = line.split(";");
@@ -260,4 +265,5 @@ public class GuiGame extends JFrame {
         next.setEnabled(false);
         board.setEnabled(false);
     }
+
 }

@@ -68,8 +68,11 @@ class ClientListener implements Runnable  {
                 welcomeWindow.showMessage(line);
                 break;
             case "Congratulations, you won!" :
-                gameWindow.endGame();
                 gameWindow.showMessage("Congratulations, you won!");
+                gameWindow.endGame();
+                break;
+            case "One of the players has quit!" :
+                gameWindow.writeMessage(line);
                 break;
 
             default:
