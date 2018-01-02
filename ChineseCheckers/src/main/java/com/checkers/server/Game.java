@@ -109,9 +109,8 @@ public class Game {
 
     protected boolean isWon(){
 
-       // int i = b.checkIfWon;
+        int i = r.checkIfWon();
         Player tmp = null;
-        int i =0;
         if(i>0&&i<7){
             for(Player current : playerList){
                 if(current.getCornerNumber() == i) {

@@ -36,7 +36,7 @@ public class Rules {
         //...
     }
 
-    int checkIfWon(){
+    public int checkIfWon(){
         for(int i = 0; i < graph.size(); i++){
             if(graph.get(i).getValue() != Board.BOARD_FIELD){
                 int player = graph.get(i).getValue();
