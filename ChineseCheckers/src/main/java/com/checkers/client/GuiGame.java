@@ -272,9 +272,10 @@ public class GuiGame extends JFrame {
             case "boardReset":
                 resetBoard(arguments);
                 break;
-            case "gameover":
+            case "won":
                 showMessage("Player"+getColor(arguments[1])+"won");
-                endGame();
+                break;
+
             default:
                 break;
         }

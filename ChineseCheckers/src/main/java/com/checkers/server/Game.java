@@ -108,23 +108,29 @@ public class Game {
     }
 
     protected boolean isWon(){
-        /*
-        int i = r.checkIfWon;
+
+       // int i = b.checkIfWon;
+        Player tmp = null;
+        int i =0;
         if(i>0&&i<7){
             for(Player current : playerList){
-                if(current.getCornerNumber==i) {
+                if(current.getCornerNumber() == i) {
                     current.writeToPlayer("Congratulations, you won!");
+                    tmp = current;
                 }else{
-                    current.writeToPlayer("gameover;"+i);
+                    current.writeToPlayer("won;"+i);
                 }
             }
-            playerList.clear();
+            b.deletePlayer(tmp.getCornerNumber());
+            playerList.remove(tmp);
+            if(playerList.size()==1){
+                sendMessage("gameover");
+            }
             return true;
         }else{
             return false;
         }
-        */
-        return false;
+
     }
     protected int getNextIndex(){
         for(int i = 0; i<freeCorners.length; i++){

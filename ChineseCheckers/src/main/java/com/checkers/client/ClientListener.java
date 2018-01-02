@@ -89,6 +89,11 @@ class ClientListener implements Runnable  {
                 gameWindow.writeMessage(line);
                 break;
 
+            case "gameover":
+                gameWindow.showMessage("Game over");
+                gameWindow.endGame();
+                break;
+
             default:
                 if (line.matches ("(move).*")){
                     gameWindow.cmd(line);
@@ -98,7 +103,7 @@ class ClientListener implements Runnable  {
                     gameWindow.cmd(line);
                 } else if (line.matches("(refreshed).*")) {
                     welcomeWindow.setList(line);
-                } else if(line.matches("(gameover).*")){
+                } else if(line.matches("(won).*")){
                     gameWindow.cmd(line);
                 } else {
                     checkersClient.showMessage(line);
