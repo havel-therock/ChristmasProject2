@@ -38,8 +38,25 @@ public class Rules {
 
     int checkIfWon(){
         for(int i = 0; i < graph.size(); i++){
+            if(graph.get(i).getValue() != Board.BOARD_FIELD){
+                int player = graph.get(i).getValue();
+                int check1 = 0;
+                int check2 = 0;
+                for(int j = 0; j < graph.size(); j++){
+                    if(graph.get(j).getValue() == player){
+                        check1++;
 
+                    }
+                    if(graph.get(j).getTargetValue() == player){
+                        check2++;
+                    }
+                }
+                if(check1 == check2){
+                    return player;
+                }
+            }
         }
+        return 0;
     }
 
     boolean checkMove(String move){
