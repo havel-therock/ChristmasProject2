@@ -45,11 +45,11 @@ public class Rules {
                 for(int j = 0; j < graph.size(); j++){
                     if(graph.get(j).getValue() == player){
                         check1++;
+                        if(graph.get(j).getTargetValue() == player){
+                            check2++;
+                        }
+                    }
 
-                    }
-                    if(graph.get(j).getTargetValue() == player){
-                        check2++;
-                    }
                 }
                 if(check1 == check2){
                     return player;
