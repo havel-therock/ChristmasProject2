@@ -148,7 +148,7 @@ public class Player {
 
     private void moveCmd(String line) {
         if(ifActive) {
-            if (myGame.r.checkMove(line)) {
+            if (myGame.r.checkMove(line + ";" + cornerNumber)) {
                 myGame.b.executeMove(line);
                 myGame.sendMessage(line);
                 if(!myGame.isWon()){

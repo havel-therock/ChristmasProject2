@@ -20,8 +20,8 @@ public class Game {
                 .moveOnlyToEmptyField(true)
                 .stepsizeOneOnly(true)
                 .canNotEscapeTargetCorner(true)
+                .moveOnlyYourPieces(true)
                 //.multiJumpsOver(true)
-                //.canNotEscapeTargetCorner(true)
                 .build();
         //create unique rules
         freeCorners = new boolean [b.getPlayers()];
