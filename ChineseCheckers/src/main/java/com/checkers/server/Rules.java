@@ -47,11 +47,10 @@ public class Rules {
     }
 
     boolean multiJumpsOver(String move){
-        if(this.multiJumpsOver== false){
+        if(this.multiJumpsOver == false){
             return true;
         }else{
-
-            return true; // or false zalezy co wyjdzie z linijek powyzej
+         return false;
         }
     }
 
@@ -86,7 +85,7 @@ public class Rules {
                     }
                 }
                 for(int i = 0; i < field1.Neighbours.size(); i++){
-                    if(field1.Neighbours.get(i).getID() == field2ID){
+                    if(field1.Neighbours.get(i).getID() == field2ID && field1.Neighbours.get(i).getValue() == Board.BOARD_FIELD){
                         return true;
                     }
                 }
@@ -103,8 +102,48 @@ public class Rules {
         if(this.jumpOverOneOnly == false){
             return true;
         }else{
-            //sprawdzanie poprawnosci przeskokow
-            return true; // or false zalezy co wyjdzie z linijek powyzej
+            if(stepSizeOneOnly(move) == true)
+                return true;
+            else{
+                String[] args = move.split(";");
+                try{
+                    Field field1 = null, field2 = null;
+                    int field1ID, field2ID;
+                    int row1 = Integer.parseInt(args[1]);
+                    int col1 = Integer.parseInt(args[2]);
+                    int row2 = Integer.parseInt(args[3]);
+                    int col2 = Integer.parseInt(args[4]);
+                    field1ID = getID(row1,col1);
+                    field2ID = getID(row2,col2);
+                    for(int i = 0; i < graph.size(); i++){
+                        if(graph.get(i).getID() == field1ID){
+                            field1 = graph.get(i);
+                        } else
+                            if(graph.get(i).getID() == field2ID){
+                                field2 = graph.get(i);
+                                if(field2.getValue() != Board.BOARD_FIELD){
+                                    return false;
+                                }
+                            }
+                    }
+
+                    for(int i = 0; i < field1.Neighbours.size(); i++){
+                        if(field1.Neighbours.get(i).getValue() != Board.BOARD_FIELD){
+                            for(int j = 0; j < field2.Neighbours.size(); j++){
+
+                            }
+                            int distance = field1.getID() - field1.Neighbours.get(i).getID();
+
+
+                        }
+                    }
+                    return false;
+                }catch(NumberFormatException ex){
+                    System.out.println("wrong data");
+                    return false;
+                }
+            }
+
         }
     }
 
@@ -117,7 +156,7 @@ public class Rules {
         }
         int colCounter;
         for(colCounter = 0; colCounter <= col; colCounter++){
-            if(tempBoard[row][colCounter] != Board.NOT_PLAYABLE_FIELD){
+            if(tempBoard[row+1][colCounter] != Board.NOT_PLAYABLE_FIELD){
                 ID++;
             }
         }
