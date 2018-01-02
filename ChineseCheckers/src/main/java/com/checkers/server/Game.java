@@ -16,7 +16,14 @@ public class Game {
     Game(String[] arguments, Player player) throws WrongData {
         this.name = arguments[1];
         b = new Board(arguments);
-        r = new Rules();
+        r = new Rules.Builder(b.graph,b.fieldsPerRow,b.tempBoard)
+                .moveOnlyToEmptyField(true)
+                .stepsizeOneOnly(true)
+                .canNotEscapeTargetCorner(true)
+                //.multiJumpsOver(true)
+                //.canNotEscapeTargetCorner(true)
+                .build();
+        //create unique rules
         freeCorners = new boolean [b.getPlayers()];
         for(int i = 0; i<b.getPlayers(); i++){
             freeCorners [i] = true;
@@ -25,7 +32,6 @@ public class Game {
         isStarted = false;
 
         addPlayer(player);
-
     }
 
     public String getName() {

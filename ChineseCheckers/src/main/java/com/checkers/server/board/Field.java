@@ -2,7 +2,7 @@ package com.checkers.server.board;
 
 import java.util.ArrayList;
 
-class Field {
+public class Field {
     Field(int ID, int value){
         this.ID = ID;
         this.value = value;
@@ -12,7 +12,7 @@ class Field {
     private int ID;
     private int value;
     private int targetValue;
-    ArrayList<Field> Neighbours;
+    public ArrayList<Field> Neighbours;
 
     public int getID() {
         return ID;

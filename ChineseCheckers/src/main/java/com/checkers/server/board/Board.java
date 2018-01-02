@@ -10,11 +10,11 @@ import java.util.ArrayList;
 //Board and it's corners(players' numbers)
 
 public class Board {
-    int[] fieldsPerRow;
-    int[][] tempBoard;
+    public int[] fieldsPerRow;
+    public int[][] tempBoard;
     int tempBoardHeight;
     int tempBoardLength;
-    ArrayList<Field> graph;
+    public ArrayList<Field> graph;
     int players;
     int pieces;
     int corners;
@@ -214,6 +214,8 @@ public class Board {
         int ID = 0;
         if(row > 1) {
             ID = sumFields(row - 1);
+        }else{
+            ID++;
         }
         int colCounter;
         for(colCounter = 0; colCounter <= col; colCounter++){
