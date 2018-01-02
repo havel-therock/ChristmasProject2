@@ -203,19 +203,11 @@ public class Board {
         }
         int colCounter;
         for(colCounter = 0; colCounter<=col; colCounter++){
-            if(tempBoard[row][colCounter] != Board.NOT_PLAYABLE_FIELD){
+            if(tempBoard[row+1][colCounter] != Board.NOT_PLAYABLE_FIELD){
                 ID++;
             }
         }
         return ID;
-    }
-
-    private int sumFields(int rowsAmount){
-        int sum = 0;
-        for(int i = 0; i < rowsAmount; i++){
-            sum = sum + fieldsPerRow[i];
-        }
-        return sum;
     }
 
     private int getIDFromTempBoard(int row, int col){
@@ -232,6 +224,16 @@ public class Board {
         ID++;
         return ID;
     }
+
+    private int sumFields(int rowsAmount){
+        int sum = 0;
+        for(int i = 0; i < rowsAmount; i++){
+            sum = sum + fieldsPerRow[i];
+        }
+        return sum;
+    }
+
+
 //ograniczenie do pieces dodac jakos tak zeby w kazdym rogu byly pionki ulozone rowno nawet jak jest ich mniej
     private void fillPlayers() {
         switch (players){
@@ -628,6 +630,7 @@ public class Board {
 
     public void executeMove(String move){
         String args[] = move.split(";");
+
         int i = getID(Integer.parseInt(args[1]),Integer.parseInt(args[2]));
         int j = getID(Integer.parseInt(args[3]),Integer.parseInt(args[4]));
 
@@ -641,7 +644,6 @@ public class Board {
                 field2 = graph.get(a);
             }
         }
-
         swapValues(field1,field2);
     }
 
