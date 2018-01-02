@@ -67,6 +67,10 @@ class ClientListener implements Runnable  {
             case "This game is still in use":
                 welcomeWindow.showMessage(line);
                 break;
+            case "Congratulations, you won!" :
+                gameWindow.endGame();
+                gameWindow.showMessage("Congratulations, you won!");
+                break;
 
             default:
                 if (line.matches ("(move).*")){

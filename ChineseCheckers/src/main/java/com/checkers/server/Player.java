@@ -66,6 +66,9 @@ public class Player {
                 deleteCmd(arguments[1]);
                 break;
 
+            case"start":
+                startCmd();
+
             default:
                 break;
         }
@@ -76,7 +79,6 @@ public class Player {
         writer.flush();
         System.out.println(message);
     }
-
 
     private void newCmd(String[] arguments){
         boolean exist = false;
@@ -99,6 +101,7 @@ public class Player {
                 writeToPlayer("Successfully created a game");
                 writeToPlayer("boardSetUp;"+game.b.getBoard());
                 writeToPlayer("info;"+Integer.toString(this.cornerNumber)+";"+this.name+";"+idGame);
+                gameList.get(i).setReady(true);
             }catch (WrongData ex){
                 writeToPlayer(ex.message);
             }
@@ -115,33 +118,46 @@ public class Player {
                 break;
             }
         }
-        if(exist){
-            if(gameList.get(i).addPlayer(this)) {
-                this.idGame = gameList.get(i).getName();
-                this.number = gameList.get(i).getCurrentPlayersNumber()-1;
-                this.cornerNumber = gameList.get(i).getBoard().getWhichCorners(this.number);
-                writeToPlayer("Successfully joined the game");
-                writeToPlayer("boardSetUp;"+gameList.get(i).b.getBoard());
-                writeToPlayer("info;"+Integer.toString(this.cornerNumber)+";"+this.name+";"+idGame);
-            }else{
-                writeToPlayer("This game is full, please select a different game or create a new one");
+        if(exist) {
+            if (!gameList.get(i).getIsStarted()) {
+                if (gameList.get(i).addPlayer(this)) {
+                    this.idGame = gameList.get(i).getName();
+                    this.number = gameList.get(i).getCurrentPlayersNumber() - 1;
+                    this.cornerNumber = gameList.get(i).getBoard().getWhichCorners(this.number);
+                    writeToPlayer("Successfully joined the game");
+                    writeToPlayer("boardSetUp;" + gameList.get(i).b.getBoard());
+                    writeToPlayer("info;" + Integer.toString(this.cornerNumber) + ";" + this.name + ";" + idGame);
+                    gameList.get(i).setReady(true);
+                } else {
+                    writeToPlayer("This game is full, please select a different game or create a new one");
+                }
+            } else {
+                writeToPlayer("This game has already started, please select a different game or create a new one ");
             }
         }else{
             writeToPlayer("Game does not exist");
         }
     }
 
-    private void moveCmd(String line) {      //parsuj to sobie w planszy i zasadach jak chesz xD
-        int i;                                // line to ten string ktory dostaje od klienta w formacie "move;x;y;x;y"
-        for (i = 0; i < gameList.size(); i++) {
-            if (gameList.get(i).getName() == idGame) {
-                if (gameList.get(i).r.checkMove(line)) {
-                    gameList.get(i).b.executeMove(line);
-                    gameList.get(i).sendMessage(line);
-                }else {
-                    writeToPlayer("This move is illegal :( ");
+    private void moveCmd(String line) {
+        int i;
+        if(ifActive) {
+            for (i = 0; i < gameList.size(); i++) {
+                if (gameList.get(i).getName() == idGame) {
+                    if (gameList.get(i).r.checkMove(line)) {
+                        gameList.get(i).b.executeMove(line);
+                        gameList.get(i).sendMessage(line);
+                        if(isNextPlayer(i)) {
+                            setNextPlayerActive(i);
+                        }
+
+                    } else {
+                        writeToPlayer("This move is illegal :( ");
+                    }
                 }
             }
+        }else{
+            writeToPlayer("It's not your move yet :(");
         }
     }
 
@@ -154,12 +170,37 @@ public class Player {
 
             if(gameList.get(i).getName().equals(idGame)){
 
-                gameList.get(i).deletePieces(this.cornerNumber);
                 gameList.get(i).delete(this);
+                gameList.get(i).setReady(false);
 
-                for (Player current: gameList.get(i).playerList) {
-                    current.writeToPlayer("Jeden z graczy opuscil gre");
-                    current.writeToPlayer("boardReset;"+gameList.get(i).b.getBoard());
+                if(gameList.get(i).isStarted) {
+
+                    gameList.get(i).deletePieces(this.cornerNumber);
+
+                    for (Player current : gameList.get(i).playerList) {
+                        current.writeToPlayer("Jeden z graczy opuscil gre");
+                        current.writeToPlayer("boardReset;" + gameList.get(i).b.getBoard());
+                    }
+
+                    if(ifActive){
+                        if(gameList.get(i).getCurrentPlayersNumber()==1){
+                            gameList.get(i).sendMessage("Congratulations, you won!");
+                        } else if(number ==  gameList.get(i).getCurrentPlayersNumber()){
+                            gameList.get(i).setActivePlayer(0);
+                        }else{
+                            gameList.get(i).setActivePlayer(number);
+                            gameList.get(i).setPlayersNumbers();
+                        }
+                    }else{
+                        if(gameList.get(i).getCurrentPlayersNumber()==1){
+                            gameList.get(i).sendMessage("Congratulations, you won!");
+                        }else if(number ==  gameList.get(i).getCurrentPlayersNumber()){
+                            return;
+                        }else{
+                            gameList.get(i).setPlayersNumbers();
+                        }
+
+                    }
                 }
             }
         }
@@ -191,6 +232,7 @@ public class Player {
         }
         writeToPlayer(tmp);
     }
+
     void deleteCmd(String name){
         for (int i = 0; i < gameList.size(); i++) {
             if (gameList.get(i).getName().equals(name)) {
@@ -202,5 +244,40 @@ public class Player {
                 }
             }
         }
+    }
+
+    private void startCmd(){
+        for (int i = 0; i < gameList.size(); i++) {
+            if (gameList.get(i).getName().equals(name)) {
+                gameList.get(i).setReady(true);
+            }
+        }
+    }
+
+    protected void setIfActive(boolean state){
+        ifActive = state;
+        writeToPlayer("It's your turn");
+
+    }
+
+     private void setNextPlayerActive(int i){
+        if(number ==  gameList.get(i).getCurrentPlayersNumber()-1){
+            gameList.get(i).setActivePlayer(0);
+        }else{
+            gameList.get(i).setActivePlayer(number+1);
+        }
+         ifActive = false;
+     }
+
+     private boolean isNextPlayer(int i){
+        if(gameList.get(i).getCurrentPlayersNumber()==1){
+            writeToPlayer("Congratulations, you won!");
+            return false;
+        }else{
+            return true;
+        }
+     }
+    protected void setNumber(int i){
+        this.number = i;
     }
 }

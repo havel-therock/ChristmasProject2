@@ -622,6 +622,7 @@ public class Board {
         field1.setValue(field2.getValue());
         field2.setValue(temp);
     }
+
     public int getPlayers(){
         return players;
     }

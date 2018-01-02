@@ -234,4 +234,9 @@ public class GuiGame extends JFrame {
         }
     }
 
+    protected void endGame(){
+        help.setEnabled(false);
+        send.setEnabled(false);
+        board.setEnabled(false);
+    }
 }

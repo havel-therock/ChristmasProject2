@@ -117,7 +117,7 @@ public class BoardPanel extends JPanel {
             int x = Integer.parseInt(arguments[0]);
             int y = Integer.parseInt(arguments[1]);
             if(x==i&&y==j){
-                g2.setColor(tmp.brighter().brighter());
+                g2.setColor(tmp.darker().darker());
                 g2.fillOval(col,row,edgeSize/maxWidth,edgeSize/maxWidth);
                 g2.setColor(Color.black);
                 g2.drawOval(col,row,edgeSize/maxWidth,edgeSize/maxWidth);
@@ -155,31 +155,44 @@ public class BoardPanel extends JPanel {
             for(int j = 0; j < maxWidth; j++){
                     if (gameBoard[i][j] != Board.NOT_PLAYABLE_FIELD) {
                         if(y>row&&y<(row+edgeSize/maxWidth) && x>col&&x<(col+edgeSize/maxWidth)){
+
                             if(!isFirst){
+                                if(isSecond){
+                                    String arguments2[] = secondCircle.split(";");
+                                    if(i == Integer.parseInt(arguments2[0]) && j == Integer.parseInt(arguments2[1])){
+                                        return;
+                                    }
+                                }
                                 firstCircle = i+";"+j+";";
                                 isFirst = true;
                                 repaint();
                                 return;
                             }else if(!isSecond){
+                                String arguments1[] = firstCircle.split(";");
+                                if(i == Integer.parseInt(arguments1[0]) && j == Integer.parseInt(arguments1[1])){
+                                        return;
+                                }
                                 secondCircle = i+";"+j;
                                 isSecond = true;
                                 repaint();
                                 return;
                             }
-                            if(isFirst){
-                                String arguments [] = firstCircle.split(";");
-                                if((Integer.parseInt(arguments[0])==i)&&(Integer.parseInt(arguments[1])==j)){
+
+                            String arguments2[] = secondCircle.split(";");
+                            String arguments1[] = firstCircle.split(";");
+
+
+                                if((Integer.parseInt(arguments1[0])==i)&&(Integer.parseInt(arguments1[1])==j)){
                                     isFirst = false;
                                     repaint();
                                 }
-                            }
-                            if(isSecond){
-                                String arguments [] = secondCircle.split(";");
-                                if((Integer.parseInt(arguments[0])==i)&&(Integer.parseInt(arguments[1])==j)){
+
+
+                                if((Integer.parseInt(arguments2[0])==i)&&(Integer.parseInt(arguments2[1])==j)){
                                     isSecond = false;
                                     repaint();
                                 }
-                            }
+
                             return;
                         }
                     }
