@@ -17,6 +17,8 @@ public class Rules {
     boolean canNotEscapeTargetCorner;
     //boolean jumpOverGivesPenalty;
     //boolean bigHops;
+
+    boolean moveOnlyYourPieces;
     //...
 
     private Rules(final Builder builder){
@@ -30,10 +32,19 @@ public class Rules {
         this.jumpOverOneOnly = builder.jumpOverOneOnly;
         this.multiJumpsOver = builder.multiJumpsOver;
         this.canNotEscapeTargetCorner = builder.canNotEscapeTargetCorner;
+        this.moveOnlyYourPieces = builder.moveOnlyYourPieces;
         //...
     }
 
+    int checkIfWon(){
+        for(int i = 0; i < graph.size(); i++){
+
+        }
+    }
+
     boolean checkMove(String move){
+        if(moveOnlyYourPieces(move) == false)
+            return false;
         if(moveOnlyToEmptyField(move) == false)
             return false;
         if(stepSizeOneOnly(move) == false)
@@ -48,6 +59,34 @@ public class Rules {
         //...
 
         return true;
+    }
+
+    boolean moveOnlyYourPieces(String move){
+        if(this.moveOnlyYourPieces == false) {
+            return true;
+        }else{
+            String[] args = move.split(";");
+            try{
+                Field field1 = null;
+                int row1 = Integer.parseInt(args[1]);
+                int col1 = Integer.parseInt(args[2]);
+                int field1ID = getID(row1,col1);
+                for(int i = 0; i < graph.size(); i++){
+                    if(graph.get(i).getID() == field1ID){
+                        field1 = graph.get(i);
+                    }
+                }
+                int playerNumber = Integer.parseInt(args[5]);
+                if(playerNumber == field1.getValue()) {
+                    return true;
+                }else {
+                    return false;
+                }
+            }catch (NumberFormatException ex){
+                System.out.println("Wrong data");
+                return false;
+            }
+        }
     }
 
     boolean moveOnlyToEmptyField(String move){
@@ -250,6 +289,8 @@ public class Rules {
         //PickOne
         private boolean moveOnlyToEmptyField;
         //End
+
+        private boolean moveOnlyYourPieces;
         //...
 
         public Builder(ArrayList<Field> graph, int[] fieldsPerRow, int[][] tempBoard) {
@@ -262,7 +303,13 @@ public class Rules {
             this.multiJumpsOver = false;
             this.canNotEscapeTargetCorner = false;
             this.moveOnlyToEmptyField = false;
+            this.moveOnlyYourPieces = false;
 
+        }
+
+        public Builder moveOnlyYourPieces(boolean moveOnlyYourPieces){
+            this.moveOnlyYourPieces = moveOnlyYourPieces;
+            return this;
         }
 
         public Builder moveOnlyToEmptyField(boolean moveOnlyToEmptyField){
