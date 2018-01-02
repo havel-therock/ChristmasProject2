@@ -15,7 +15,9 @@ public class Game {
         b = new Board(arguments);
         r = new Rules
                 .Builder(b.graph,b.fieldsPerRow,b.tempBoard)
+                .moveOnlyToEmptyField(true)
                 .stepsizeOneOnly(true)
+                .canNotEscapeTargetCorner(true)
                 //.multiJumpsOver(true)
                 //.canNotEscapeTargetCorner(true)
                 .build();

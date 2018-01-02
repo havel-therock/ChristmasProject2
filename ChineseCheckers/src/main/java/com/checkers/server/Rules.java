@@ -9,7 +9,7 @@ public class Rules {
     int[] fieldsPerRow;
     int[][] tempBoard;
 
-
+    boolean moveOnlyToEmptyField;
     boolean stepSizeOneOnly;
     boolean jumpOverOneOnly;
 
@@ -24,6 +24,8 @@ public class Rules {
         this.fieldsPerRow = builder.fieldsPerRow;
         this.tempBoard = builder.tempBoard;
 
+        this.moveOnlyToEmptyField = builder.moveOnlyToEmptyField;
+
         this.stepSizeOneOnly = builder.stepSizeOneOnly;
         this.jumpOverOneOnly = builder.jumpOverOneOnly;
         this.multiJumpsOver = builder.multiJumpsOver;
@@ -32,6 +34,8 @@ public class Rules {
     }
 
     boolean checkMove(String move){
+        if(moveOnlyToEmptyField(move) == false)
+            return false;
         if(stepSizeOneOnly(move) == false)
             return false;
         if(jumpOverOneOnly(move) == false)
@@ -46,6 +50,41 @@ public class Rules {
         return true;
     }
 
+    boolean moveOnlyToEmptyField(String move){
+        if(this.moveOnlyToEmptyField == false) {
+            return true;
+        }else{
+            String[] args = move.split(";");
+
+            try{
+                Field field1 = null, field2 = null;
+                int field1ID, field2ID;
+                int row1 = Integer.parseInt(args[1]);
+                int col1 = Integer.parseInt(args[2]);
+                int row2 = Integer.parseInt(args[3]);
+                int col2 = Integer.parseInt(args[4]);
+                field1ID = getID(row1,col1);
+                field2ID = getID(row2,col2);
+                for(int i = 0; i < graph.size(); i++){
+                    if(graph.get(i).getID() == field1ID){
+                        field1 = graph.get(i);
+
+                    } else if(graph.get(i).getID() == field2ID) {
+                        field2 = graph.get(i);
+                    }
+                }
+                if(field2.getValue() == Board.BOARD_FIELD)
+                    return true;
+                else
+                    return false;
+
+            }catch(NumberFormatException ex){
+                System.out.println("wrong data");
+                return false;
+            }
+        }
+    }
+
     boolean multiJumpsOver(String move){
         if(this.multiJumpsOver == false){
             return true;
@@ -58,8 +97,36 @@ public class Rules {
         if(this.canNotEscapeTargetCorner == false){
             return true;
         }else{
+            String[] args = move.split(";");
+            try{
+                Field field1 = null, field2 = null;
+                int field1ID, field2ID;
+                int row1 = Integer.parseInt(args[1]);
+                int col1 = Integer.parseInt(args[2]);
+                int row2 = Integer.parseInt(args[3]);
+                int col2 = Integer.parseInt(args[4]);
+                field1ID = getID(row1,col1);
+                field2ID = getID(row2,col2);
+                for(int i = 0; i < graph.size(); i++){
+                    if(graph.get(i).getID() == field1ID){
+                        field1 = graph.get(i);
 
-            return true; // or false zalezy co wyjdzie z linijek powyzej
+                    } else if(graph.get(i).getID() == field2ID) {
+                        field2 = graph.get(i);
+                    }
+                }
+                if(field1.getValue() == field1.getTargetValue()){
+                    if(field2.getTargetValue() == field1.getTargetValue()){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+                    return true;
+            }catch(NumberFormatException ex){
+                System.out.println("wrong data");
+                return false;
+            }
         }
     }
 
@@ -118,25 +185,15 @@ public class Rules {
                     for(int i = 0; i < graph.size(); i++){
                         if(graph.get(i).getID() == field1ID){
                             field1 = graph.get(i);
-                        } else
-                            if(graph.get(i).getID() == field2ID){
+                        } else {
+                            if (graph.get(i).getID() == field2ID) {
                                 field2 = graph.get(i);
-                                if(field2.getValue() != Board.BOARD_FIELD){
-                                    return false;
-                                }
                             }
-                    }
-
-                    for(int i = 0; i < field1.Neighbours.size(); i++){
-                        if(field1.Neighbours.get(i).getValue() != Board.BOARD_FIELD){
-                            for(int j = 0; j < field2.Neighbours.size(); j++){
-
-                            }
-                            int distance = field1.getID() - field1.Neighbours.get(i).getID();
-
 
                         }
                     }
+
+
                     return false;
                 }catch(NumberFormatException ex){
                     System.out.println("wrong data");
@@ -147,15 +204,13 @@ public class Rules {
         }
     }
 
-
-
     private int getID(int row, int col){
-        int ID = 1;
+        int ID = 0;
         if(row > 0) {
-            ID = sumFields(row - 1);
+            ID = sumFields(row);
         }
         int colCounter;
-        for(colCounter = 0; colCounter <= col; colCounter++){
+        for(colCounter = 0; colCounter<=col + 1; colCounter++){
             if(tempBoard[row+1][colCounter] != Board.NOT_PLAYABLE_FIELD){
                 ID++;
             }
@@ -193,7 +248,7 @@ public class Rules {
         //End
 
         //PickOne
-        //private boolean jumpOverGivesPenalty;
+        private boolean moveOnlyToEmptyField;
         //End
         //...
 
@@ -206,7 +261,13 @@ public class Rules {
             this.jumpOverOneOnly = false;
             this.multiJumpsOver = false;
             this.canNotEscapeTargetCorner = false;
+            this.moveOnlyToEmptyField = false;
 
+        }
+
+        public Builder moveOnlyToEmptyField(boolean moveOnlyToEmptyField){
+            this.moveOnlyToEmptyField = moveOnlyToEmptyField;
+            return this;
         }
 
         public Builder stepsizeOneOnly(boolean stepSizeOneOnly){
