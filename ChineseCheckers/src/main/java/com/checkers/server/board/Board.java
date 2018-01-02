@@ -197,13 +197,13 @@ public class Board {
     }
 
     private int getID(int row, int col){
-        int ID =1;
+        int ID = 0;
         if(row > 0) {
-            ID = sumFields(row - 1);
+            ID = sumFields(row);
         }
         int colCounter;
-        for(colCounter = 0; colCounter<=col; colCounter++){
-            if(tempBoard[row][colCounter] != Board.NOT_PLAYABLE_FIELD){
+        for(colCounter = 0; colCounter<=col + 1; colCounter++){
+            if(tempBoard[row+1][colCounter] != Board.NOT_PLAYABLE_FIELD){
                 ID++;
             }
         }
@@ -224,12 +224,11 @@ public class Board {
             ID = sumFields(row - 1);
         }
         int colCounter;
-        for(colCounter = 0; colCounter < col; colCounter++){
+        for(colCounter = 0; colCounter <= col; colCounter++){
             if(tempBoard[row][colCounter] != NOT_PLAYABLE_FIELD){
                 ID++;
             }
         }
-        ID++;
         return ID;
     }
 //ograniczenie do pieces dodac jakos tak zeby w kazdym rogu byly pionki ulozone rowno nawet jak jest ich mniej
