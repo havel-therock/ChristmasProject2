@@ -14,14 +14,13 @@ import java.awt.event.WindowEvent;
 public class GuiGame extends JFrame {
 
     private JLabel playerName;
-    private JButton help,send;
+    private JButton help,send,quit,next;
     private JPanel topPanel;
     private JPanel bottomPanel;
     private JTextArea textArea;
     private BoardPanel board;
     private int[][] gameBoard;
     private CheckersClient checkersClient;
-    private String myColor;
     private JScrollPane scroll;
 
     GuiGame (CheckersClient listener){
@@ -157,9 +156,11 @@ public class GuiGame extends JFrame {
     private void createComponents() {
         help = new JButton("Help");
         send = new JButton("Send");
+        quit = new JButton("Exit");
+        next = new JButton("Next");
         board = new BoardPanel(gameBoard);
         topPanel = new JPanel();
-        playerName = new JLabel(myColor);
+        playerName = new JLabel();
         bottomPanel = new JPanel();
         textArea = new JTextArea(3,50);
         textArea.setEditable(false);
@@ -173,9 +174,11 @@ public class GuiGame extends JFrame {
 
         bottomPanel.add(textArea);
 
+        topPanel.add(quit);
         topPanel.add(help);
         topPanel.add(playerName);
         topPanel.add(send);
+        topPanel.add(next);
 
 
         add(board,BorderLayout.CENTER);
@@ -190,11 +193,22 @@ public class GuiGame extends JFrame {
                 checkersClient.quit(2);
             }
         });
+
+        quit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                checkersClient.quit(2);
+            }
+        });
+
         help.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 showMessage("Select two pieces and click on send button to execute the move; \n" +
                         "Click again on a selected piece to deselect it and use it again; \n" +
+                        "Click next button to omit your move \n"+
+                        "Click on exit if you want to quit the game \n"+
+                        "Careful! If the game has started you won't be able to join \n"+
                         "The first player in the opposite corner wins! ");
             }
         });
@@ -206,6 +220,12 @@ public class GuiGame extends JFrame {
                 }else{
                     showMessage("Please select a valid move (with start and end)");
                 }
+            }
+        });
+        next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                checkersClient.sendMessage("next;");
             }
         });
     }
@@ -237,6 +257,7 @@ public class GuiGame extends JFrame {
     protected void endGame(){
         help.setEnabled(false);
         send.setEnabled(false);
+        next.setEnabled(false);
         board.setEnabled(false);
     }
 }
