@@ -100,11 +100,12 @@ public class Player {
                 myGame = game;
                 this.idGame = myGame.getName();
                 this.number = 0;
+                myGame.setReady(number);
                 this.cornerNumber = myGame.b.getWhichCorners(this.number);
                 writeToPlayer("Successfully created a game");
                 writeToPlayer("boardSetUp;"+myGame.b.getBoard());
                 writeToPlayer("info;"+Integer.toString(this.cornerNumber)+";"+this.name+";"+idGame);
-                myGame.setReady(true);
+
             }catch (WrongData ex){
                 writeToPlayer(ex.message);
             }
@@ -126,12 +127,14 @@ public class Player {
                 if (gameList.get(i).addPlayer(this)) {
                     myGame = gameList.get(i);
                     this.idGame = myGame.getName();
-                    this.number = myGame.getCurrentPlayersNumber() - 1;
+                    this.number = myGame.getNextIndex();
                     this.cornerNumber = myGame.getBoard().getWhichCorners(this.number);
                     writeToPlayer("Successfully joined the game");
                     writeToPlayer("boardSetUp;" + myGame.b.getBoard());
                     writeToPlayer("info;" + Integer.toString(this.cornerNumber) + ";" + this.name + ";" + idGame);
-                    myGame.setReady(true);
+                    myGame.sendMessage("New player joined");
+                    myGame.setReady(number);
+
                 } else {
                     writeToPlayer("This game is full, please select a different game or create a new one");
                 }
@@ -148,9 +151,12 @@ public class Player {
             if (myGame.r.checkMove(line)) {
                 myGame.b.executeMove(line);
                 myGame.sendMessage(line);
-                if(isNextPlayer()) {
-                    setNextPlayerActive();
+                if(!myGame.isWon()){
+                    if(isNextPlayer()) {
+                        setNextPlayerActive();
+                    }
                 }
+
             } else {
                 writeToPlayer("This move is illegal :( ");
             }
@@ -163,9 +169,9 @@ public class Player {
 
         this.connected=false;
         writeToPlayer("Player removed");
-
+        if(myGame != null){
         myGame.delete(this);
-        myGame.setReady(false);
+        myGame.setNotReady(number);
 
         if(myGame.isStarted) {
 
@@ -174,6 +180,11 @@ public class Player {
             for (Player current : myGame.playerList) {
                 current.writeToPlayer("One of the players has quit!");
                 current.writeToPlayer("boardReset;" + myGame.b.getBoard());
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
             if(ifActive){
@@ -194,6 +205,7 @@ public class Player {
                     myGame.setPlayersNumbers();
                 }
             }
+        }
         }
 
     }

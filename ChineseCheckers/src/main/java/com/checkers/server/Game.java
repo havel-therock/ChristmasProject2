@@ -10,16 +10,21 @@ public class Game {
     String name;
     int ready;
     boolean isStarted;
+    boolean [] freeCorners;
     ArrayList<Player> playerList = new ArrayList<>();
 
     Game(String[] arguments, Player player) throws WrongData {
         this.name = arguments[1];
-        playerList.add(player);
         b = new Board(arguments);
         r = new Rules();
-        ready = 0;
+        freeCorners = new boolean [b.getPlayers()];
+        for(int i = 0; i<b.getPlayers(); i++){
+            freeCorners [i] = true;
+        }
+
         isStarted = false;
 
+        addPlayer(player);
 
     }
 
@@ -29,7 +34,7 @@ public class Game {
 
     protected boolean addPlayer(Player player){
         if(playerList.size()<b.getPlayers()) {
-            playerList.add(player);
+            playerList.add(getNextIndex(),player);
             return true;
         }else{
             return false;
@@ -58,20 +63,23 @@ public class Game {
         return b;
     }
 
-    protected void setReady(boolean state){
+    protected void setReady(int index){
         if(!isStarted) {
-            if (state) {
-                ready++;
-            } else {
-                ready--;
-            }
-            if (ready == b.getPlayers()) {
+          freeCorners[index] = false;
+
+            if (getNextIndex() == -1) {
+                sendMessage("Game started");
                 isStarted = true;
                 random();
             }
         }
     }
 
+    protected void setNotReady (int index){
+        if(!isStarted){
+            freeCorners[index] = true;
+        }
+    }
     private void random(){
         Random r = new Random();
         int i;
@@ -80,7 +88,9 @@ public class Game {
     }
 
     protected void setActivePlayer(int i){
-        playerList.get(i).setIfActive(true);
+        if(getCurrentPlayersNumber()>0) {
+            playerList.get(i).setIfActive(true);
+        }
     }
     protected boolean getIsStarted(){
         return isStarted;
@@ -89,5 +99,33 @@ public class Game {
         for (int i =0;i<playerList.size();i++) {
             playerList.get(i).setNumber(i);
         }
+    }
+
+    protected boolean isWon(){
+        /*
+        int i = r.checkIfWon;
+        if(i>0&&i<7){
+            for(Player current : playerList){
+                if(current.getCornerNumber==i) {
+                    current.writeToPlayer("Congratulations, you won!");
+                }else{
+                    current.writeToPlayer("gameover;"+i);
+                }
+            }
+            playerList.clear();
+            return true;
+        }else{
+            return false;
+        }
+        */
+        return false;
+    }
+    protected int getNextIndex(){
+        for(int i = 0; i<freeCorners.length; i++){
+            if(freeCorners[i]){
+                return i;
+            }
+        }
+        return -1;
     }
 }

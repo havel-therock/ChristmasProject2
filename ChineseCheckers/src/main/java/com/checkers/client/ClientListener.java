@@ -56,34 +56,50 @@ class ClientListener implements Runnable  {
             case "Server will stop soon":
                 checkersClient.handleServerClosing();
                 break;
+
             case "Player removed":
                 break;
+
             case "Name valid" :
                 welcomeWindow.setHasName(true);
                 break;
+
             case "Name invalid":
                 welcomeWindow.setHasName(false);
                 break;
+
             case "This game is still in use":
                 welcomeWindow.showMessage(line);
                 break;
+
             case "Congratulations, you won!" :
                 gameWindow.showMessage("Congratulations, you won!");
                 gameWindow.endGame();
                 break;
+
+            case "New player joined" :
+                gameWindow.writeMessage(line);
+                break;
+
+            case "Game started" :
+                gameWindow.writeMessage(line);
+                break;
+
             case "One of the players has quit!" :
                 gameWindow.writeMessage(line);
                 break;
 
             default:
                 if (line.matches ("(move).*")){
-                    gameWindow.boardCmd(line);
+                    gameWindow.cmd(line);
                 } else if(line.matches("(board).*")){
-                    gameWindow.boardCmd(line);
+                    gameWindow.cmd(line);
                 } else if(line.matches("(info).*")){
-                    gameWindow.boardCmd(line);
+                    gameWindow.cmd(line);
                 } else if (line.matches("(refreshed).*")) {
                     welcomeWindow.setList(line);
+                } else if(line.matches("(gameover).*")){
+                    gameWindow.cmd(line);
                 } else {
                     checkersClient.showMessage(line);
                 }

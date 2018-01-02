@@ -234,11 +234,29 @@ public class GuiGame extends JFrame {
     }
 
     protected void writeMessage(String line){
-        String tmp =  textArea.getText();
-        textArea.setText(tmp+"\n"+line);
+       textArea.setText(line);
     }
 
-    protected void boardCmd(String line) {
+    private String getColor(String i){
+        switch (i){
+            case "1":
+                return "blue";
+            case "2":
+                return "red";
+            case "3":
+                return "cyan";
+            case "4":
+                return "orange";
+            case "5":
+                return "green";
+            case "6":
+                return  "magenta";
+            default:
+                return "black";
+        }
+    }
+
+    protected void cmd(String line) {
 
         String[] arguments = line.split(";");
         switch (arguments[0]) {
@@ -254,6 +272,9 @@ public class GuiGame extends JFrame {
             case "boardReset":
                 resetBoard(arguments);
                 break;
+            case "gameover":
+                showMessage("Player"+getColor(arguments[1])+"won");
+                endGame();
             default:
                 break;
         }
