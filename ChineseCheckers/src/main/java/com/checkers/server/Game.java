@@ -13,8 +13,12 @@ public class Game {
         this.name = arguments[1];
         playerList.add(player);
         b = new Board(arguments);
-        r = new Rules();
-
+        r = new Rules
+                .Builder(b.graph,b.fieldsPerRow,b.tempBoard)
+                .multiJumpsOver(true)
+                .canNotEscapeTargetCorner(true)
+                .build();
+        //create unique rules
 
     }
 
