@@ -240,19 +240,19 @@ public class GuiGame extends JFrame {
     private String getColor(String i){
         switch (i){
             case "1":
-                return "blue";
+                return "Blue";
             case "2":
-                return "red";
+                return "Red";
             case "3":
-                return "cyan";
+                return "Cyan";
             case "4":
-                return "orange";
+                return "Orange";
             case "5":
-                return "green";
+                return "Green";
             case "6":
-                return  "magenta";
+                return  "Magenta";
             default:
-                return "black";
+                return "Black";
         }
     }
 
@@ -273,7 +273,7 @@ public class GuiGame extends JFrame {
                 resetBoard(arguments);
                 break;
             case "won":
-                showMessage("Player"+getColor(arguments[1])+"won");
+                showMessage(getColor(arguments[1])+" player won");
                 break;
 
             default:
