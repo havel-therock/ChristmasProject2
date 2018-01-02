@@ -155,6 +155,21 @@ public class Player {
                     if(isNextPlayer()) {
                         setNextPlayerActive();
                     }
+                }else if(myGame.getCurrentPlayersNumber()>1){
+                    if(ifActive){
+                       if(number ==  myGame.getCurrentPlayersNumber()){
+                            myGame.setActivePlayer(0);
+                       }else{
+                            myGame.setActivePlayer(number);
+                            myGame.setPlayersNumbers();
+                        }
+                    }else{
+                        if(number ==  myGame.getCurrentPlayersNumber()){
+                            return;
+                        }else{
+                            myGame.setPlayersNumbers();
+                        }
+                    }
                 }
 
             } else {
