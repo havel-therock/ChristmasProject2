@@ -122,6 +122,11 @@ public class Game {
             }
             b.deletePlayer(tmp.getCornerNumber());
             playerList.remove(tmp);
+
+            for(Player current : playerList){
+                current.writeToPlayer("boardReset;" + b.getBoard());
+            }
+
             if(playerList.size()==1){
                 sendMessage("gameover");
             }
