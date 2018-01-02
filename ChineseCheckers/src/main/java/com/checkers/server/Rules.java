@@ -1,12 +1,23 @@
 package com.checkers.server;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
 public class Rules {
+    ArrayList<Field> graph;
+
     boolean jumpOver = false;
     boolean bigHops = false;
     boolean multiJumpsOver = false;
     boolean jumpOverGivesPenalty = false;
     boolean step = true;
+    boolean
     //...
+
+    //Rules(ArrayList<Field> graph){
+     //   this.graph = graph;
+//
+ //   }
 
     boolean checkMove(String move){
         if(step(move) == false)
@@ -45,5 +56,19 @@ public class Rules {
             //sprawdzanie poprawnosci przeskokow
             return true; // or false zalezy co wyjdzie z linijek powyzej
         }
+    }
+
+    private int getID(int row, int col){
+        int ID = 1;
+        if(row > 1) {
+            ID = sumFields(row);
+        }
+        int colCounter;
+        for(colCounter = 0; colCounter <= col; colCounter++){
+        //    if(tempBoard[row][colCounter] != NOT_PLAYABLE_FIELD){
+                ID++;
+         //   }
+        }
+        return ID;
     }
 }

@@ -206,14 +206,15 @@ public class Board {
         int ID = 0;
         if(row > 1) {
             ID = sumFields(row - 1);
+        }else{
+            ID++;
         }
         int colCounter;
-        for(colCounter = 0; colCounter < col; colCounter++){
+        for(colCounter = 0; colCounter <= col; colCounter++){
             if(tempBoard[row][colCounter] != NOT_PLAYABLE_FIELD){
                 ID++;
             }
         }
-        ID++;
         return ID;
     }
 //ograniczenie do pieces dodac jakos tak zeby w kazdym rogu byly pionki ulozone rowno nawet jak jest ich mniej
