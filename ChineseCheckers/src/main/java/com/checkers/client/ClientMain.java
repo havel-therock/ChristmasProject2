@@ -107,6 +107,7 @@ public class ClientMain {
                 closeWindows();
                 windowsArray[2]=true;
                 System.out.println("New game window created");
+
             }
         });
     }

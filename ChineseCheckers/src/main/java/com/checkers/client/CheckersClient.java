@@ -45,7 +45,7 @@ class CheckersClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        gameWindow.showMessage(line);
+        //gameWindow.showMessage(line);
         clientListener.setGameBoard(gameWindow);
     }
 
