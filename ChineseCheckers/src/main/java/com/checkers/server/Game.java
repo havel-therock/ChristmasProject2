@@ -11,7 +11,7 @@ public class Game {
     int ready;
     boolean isStarted;
     boolean [] freeCorners;
-    ArrayList<Player> playerList = new ArrayList<>();
+    ArrayList<User> playerList = new ArrayList<>();
 
     Game(String[] arguments, Player player) throws WrongData {
         this.name = arguments[1];
@@ -111,9 +111,9 @@ public class Game {
     protected boolean isWon(){
 
         int i = r.checkIfWon();
-        Player tmp = null;
+        User tmp = null;
         if(i>0&&i<7){
-            for(Player current : playerList){
+            for(User current : playerList){
                 if(current.getCornerNumber() == i) {
                     current.writeToPlayer("Congratulations, you won!");
                     tmp = current;
@@ -124,7 +124,7 @@ public class Game {
             b.deletePlayer(tmp.getCornerNumber());
             playerList.remove(tmp);
 
-            for(Player current : playerList){
+            for(User current : playerList){
                 current.writeToPlayer("boardReset;" + b.getBoard());
             }
 

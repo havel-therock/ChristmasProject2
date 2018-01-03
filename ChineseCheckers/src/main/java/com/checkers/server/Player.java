@@ -76,7 +76,7 @@ public class Player implements User{
         }
     }
 
-    protected void writeToPlayer(String message){
+    public void writeToPlayer(String message){
         writer.println(message);
         writer.flush();
         System.out.println(message);
@@ -202,7 +202,7 @@ public class Player implements User{
 
             myGame.deletePieces(this.cornerNumber);
 
-            for (Player current : myGame.playerList) {
+            for (User current : myGame.playerList) {
                 current.writeToPlayer("One of the players has quit!");
                 current.writeToPlayer("boardReset;" + myGame.b.getBoard());
             }
@@ -252,7 +252,7 @@ public class Player implements User{
             return;
         }
         for (Game currentG : gameList) {
-            for(Player currentP : currentG.playerList){
+            for(User currentP : currentG.playerList){
                 if(currentP.name.equals(name)){
                     writeToPlayer("Name invalid");
                     return;
@@ -285,7 +285,7 @@ public class Player implements User{
         }
     }
 
-    protected void setIfActive(boolean state){
+    public void setIfActive(boolean state){
         ifActive = state;
         if(state == true) {
             writeToPlayer("It's your turn");
@@ -311,10 +311,10 @@ public class Player implements User{
             return true;
         }
      }
-    protected void setNumber(int i){
+    public  void setNumber(int i){
         this.number = i;
     }
-    protected int getCornerNumber(){
+    public int getCornerNumber(){
         return cornerNumber;
     }
     protected int getNumber(){
