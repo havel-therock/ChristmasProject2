@@ -262,9 +262,9 @@ public class Rules {
 
     private int getID(int row, int col){
         int ID = 0;
-        if(row > 0) {
+       // if(row > 0) {
             ID = sumFields(row);
-        }
+       // }
         int colCounter;
         for(colCounter = 0; colCounter<=col + 1; colCounter++){
             if(tempBoard[row+1][colCounter] != Board.NOT_PLAYABLE_FIELD){
