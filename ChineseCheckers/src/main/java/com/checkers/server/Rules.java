@@ -5,6 +5,9 @@ import com.checkers.server.board.Field;
 import java.util.ArrayList;
 
 public class Rules {
+
+    boolean nextMove;
+
     ArrayList<Field> graph;
     int[] fieldsPerRow;
     int[][] tempBoard;
@@ -18,10 +21,13 @@ public class Rules {
     //boolean jumpOverGivesPenalty;
     //boolean bigHops;
 
+
     boolean moveOnlyYourPieces;
     //...
 
     private Rules(final Builder builder){
+        nextMove = false;
+
         this.graph = builder.graph;
         this.fieldsPerRow = builder.fieldsPerRow;
         this.tempBoard = builder.tempBoard;
@@ -35,6 +41,8 @@ public class Rules {
         this.moveOnlyYourPieces = builder.moveOnlyYourPieces;
         //...
     }
+
+
 
     public int checkIfWon(){
         for(int i = 0; i < graph.size(); i++){
@@ -76,6 +84,10 @@ public class Rules {
         //...
 
         return true;
+    }
+
+    public boolean ifNextMovePossible(){
+        return nextMove;
     }
 
     boolean moveOnlyYourPieces(String move){
@@ -145,6 +157,7 @@ public class Rules {
         if(this.multiJumpsOver == false){
             return true;
         }else{
+
          return false;
         }
     }

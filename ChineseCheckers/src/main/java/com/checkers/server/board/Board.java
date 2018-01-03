@@ -9,6 +9,14 @@ import java.util.ArrayList;
 //    4
 //Board and it's corners(players' numbers)
 
+//
+//
+//   0 1
+//  5 x 2
+//   4 3
+//
+// Neighbours directions
+
 public class Board {
     public int[] fieldsPerRow;
     public int[][] tempBoard;
@@ -138,6 +146,7 @@ public class Board {
                             }
                         }
                         field.Neighbours.add(neighbour);
+                        field.directions[0] = neighbourID;
                     }
                     if(tempBoard[i - 1][j + 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i - 1, j + 1);
@@ -148,6 +157,7 @@ public class Board {
                             }
                         }
                         field.Neighbours.add(neighbour);
+                        field.directions[1] = neighbourID;
                     }
                     if(j-2 >= 0)
                         if(tempBoard[i][j - 2] == BOARD_FIELD){
@@ -159,6 +169,7 @@ public class Board {
                                 }
                             }
                             field.Neighbours.add(neighbour);
+                            field.directions[5] = neighbourID;
                         }
                     if(j+2 < tempBoardLength)
                         if(tempBoard[i][j + 2] == BOARD_FIELD){
@@ -170,6 +181,7 @@ public class Board {
                                 }
                             }
                             field.Neighbours.add(neighbour);
+                            field.directions[2] = neighbourID;
                         }
                     if(tempBoard[i + 1][j - 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i + 1, j - 1);
@@ -180,6 +192,8 @@ public class Board {
                             }
                         }
                         field.Neighbours.add(neighbour);
+                        field.directions[4] = neighbourID;
+
                     }
                     if(tempBoard[i + 1][j + 1] == BOARD_FIELD){
                         neighbourID = getIDFromTempBoard(i + 1, j + 1);
@@ -190,6 +204,7 @@ public class Board {
                             }
                         }
                         field.Neighbours.add(neighbour);
+                        field.directions[3] = neighbourID;
                     }
                 }
             }

@@ -8,11 +8,16 @@ public class Field {
         this.value = value;
         targetValue = Board.NOT_PLAYABLE_FIELD;
         Neighbours = new ArrayList<Field>();
+        directions = new int[6];
+        for(int i = 0; i < 6; i++){
+            directions[i] = 0;
+        }
     }
     private int ID;
     private int value;
     private int targetValue;
     public ArrayList<Field> Neighbours;
+    public int[] directions;
 
     public int getID() {
         return ID;

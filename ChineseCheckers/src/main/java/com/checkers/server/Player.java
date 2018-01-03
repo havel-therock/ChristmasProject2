@@ -147,11 +147,17 @@ public class Player {
     }
 
     private void moveCmd(String line) {
+
         if(ifActive) {
+
             if (myGame.r.checkMove(line + ";" + cornerNumber)) {
                 myGame.b.executeMove(line);
                 myGame.sendMessage(line);
+
                 if(!myGame.isWon()){
+                  //  if(myGame.r.ifNextMovePossible()){
+                    //    writeToPlayer("You have another move");
+                    //}else
                     if(isNextPlayer()) {
                         setNextPlayerActive();
                     }

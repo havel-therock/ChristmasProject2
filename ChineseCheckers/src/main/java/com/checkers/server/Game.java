@@ -18,9 +18,10 @@ public class Game {
         b = new Board(arguments);
         r = new Rules.Builder(b.graph,b.fieldsPerRow,b.tempBoard)
                 .moveOnlyToEmptyField(true)
-                .stepsizeOneOnly(true)
                 .canNotEscapeTargetCorner(true)
                 .moveOnlyYourPieces(true)
+                .stepsizeOneOnly(true)
+                //.jumpOverOneOnly(true)
                 //.multiJumpsOver(true)
                 .build();
         //create unique rules
