@@ -238,9 +238,12 @@ public class Rules {
         if(this.jumpOverOneOnly == false){
             return true;
         }else{
-            if(stepSizeOneOnly(move) == true)
+            this.stepSizeOneOnly = true;
+            if(stepSizeOneOnly(move) == true){
+                this.stepSizeOneOnly = false;
                 return true;
-            else{
+            } else{
+                this.stepSizeOneOnly = false;
                 String[] args = move.split(";");
                 try{
                     Field field1 = null, field2 = null;
@@ -254,16 +257,23 @@ public class Rules {
                     for(int i = 0; i < graph.size(); i++){
                         if(graph.get(i).getID() == field1ID){
                             field1 = graph.get(i);
-                        } else {
-                            if (graph.get(i).getID() == field2ID) {
-                                field2 = graph.get(i);
-                            }
-
+                        } else if(graph.get(i).getID() == field2ID) {
+                            field2 = graph.get(i);
                         }
                     }
 
-
+                    for(int i = 0; i < field1.Neighbours.size(); i++){
+                        if(field1.Neighbours.get(i).getValue() != Board.BOARD_FIELD) {
+                            Field temp = field1.Neighbours.get(i);
+                            int dir1 = field1.getNeighbourDirection(temp.getID());
+                            int endID = temp.directions[dir1];
+                            if(endID == field2.getID()){
+                                return true;
+                            }
+                        }
+                    }
                     return false;
+
                 }catch(NumberFormatException ex){
                     System.out.println("wrong data");
                     return false;

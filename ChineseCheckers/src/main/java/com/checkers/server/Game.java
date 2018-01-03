@@ -20,8 +20,8 @@ public class Game {
                 .moveOnlyToEmptyField(true)
                 .canNotEscapeTargetCorner(true)
                 .moveOnlyYourPieces(true)
-                .stepsizeOneOnly(true)
-                //.jumpOverOneOnly(true)
+                //.stepsizeOneOnly(true)
+                .jumpOverOneOnly(true)
                 //.multiJumpsOver(true)
                 .build();
         //create unique rules

@@ -44,6 +44,15 @@ public class Field {
         targetValue = (value + 2) % 6 + 1;
     }
 
+    public int getNeighbourDirection(int ID){
+        for(int i = 0; i < directions.length; i++){
+            if(directions[i] == ID)
+                return i;
+        }
+        return -1;
+    }
+
+
     //get target value i get target beda uzywane do sprawdzania czy ktos wygral.
     // sprawdzanie po wszystkich field dla ktorych get target  == 1  to jesli dla wszytskich get target == 1
     // get value == 1 to gracz pierwszy wygral i tak dalej po wszystkich graczach
