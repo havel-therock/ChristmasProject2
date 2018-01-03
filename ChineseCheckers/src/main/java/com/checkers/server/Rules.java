@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 public class Rules {
 
-    boolean nextMove;
+    boolean nextMove = false;
+    Field lastField;
 
     ArrayList<Field> graph;
     int[] fieldsPerRow;
@@ -26,7 +27,6 @@ public class Rules {
     //...
 
     private Rules(final Builder builder){
-        nextMove = false;
 
         this.graph = builder.graph;
         this.fieldsPerRow = builder.fieldsPerRow;
@@ -84,10 +84,6 @@ public class Rules {
         //...
 
         return true;
-    }
-
-    public boolean ifNextMovePossible(){
-        return nextMove;
     }
 
     boolean moveOnlyYourPieces(String move){
@@ -150,15 +146,6 @@ public class Rules {
                 System.out.println("wrong data");
                 return false;
             }
-        }
-    }
-
-    boolean multiJumpsOver(String move){
-        if(this.multiJumpsOver == false){
-            return true;
-        }else{
-
-         return false;
         }
     }
 
@@ -280,6 +267,102 @@ public class Rules {
                 }
             }
 
+        }
+    }
+
+    boolean multiJumpsOver(String move){
+        if(this.multiJumpsOver == false){
+            return true;
+        }else{
+            if(!nextMove){
+                // first not jump over move and the last one
+                this.stepSizeOneOnly = true;
+                if(stepSizeOneOnly(move) == true) {
+                    this.stepSizeOneOnly = false;
+                    return true;
+                }else{
+                    //first jump over
+                    this.stepSizeOneOnly = false;
+                    String[] args = move.split(";");
+                    try{
+                        Field field1 = null, field2 = null;
+                        int field1ID, field2ID;
+                        int row1 = Integer.parseInt(args[1]);
+                        int col1 = Integer.parseInt(args[2]);
+                        int row2 = Integer.parseInt(args[3]);
+                        int col2 = Integer.parseInt(args[4]);
+                        field1ID = getID(row1,col1);
+                        field2ID = getID(row2,col2);
+                        for(int i = 0; i < graph.size(); i++){
+                            if(graph.get(i).getID() == field1ID){
+                                field1 = graph.get(i);
+                            } else if(graph.get(i).getID() == field2ID) {
+                                field2 = graph.get(i);
+                            }
+                        }
+
+                        for(int i = 0; i < field1.Neighbours.size(); i++){
+                            if(field1.Neighbours.get(i).getValue() != Board.BOARD_FIELD) {
+                                Field temp = field1.Neighbours.get(i);
+                                int dir1 = field1.getNeighbourDirection(temp.getID());
+                                int endID = temp.directions[dir1];
+                                if(endID == field2.getID()){
+                                    this.nextMove = true;
+                                    lastField = field2;
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+
+                    }catch(NumberFormatException ex){
+                        System.out.println("wrong data");
+                        return false;
+                    }
+                }
+            }else{
+                //next jumps over !!!
+                //this.stepSizeOneOnly = false;
+                String[] args = move.split(";");
+                try{
+                    Field field1 = null, field2 = null;
+                    int field1ID, field2ID;
+                    int row1 = Integer.parseInt(args[1]);
+                    int col1 = Integer.parseInt(args[2]);
+                    int row2 = Integer.parseInt(args[3]);
+                    int col2 = Integer.parseInt(args[4]);
+                    field1ID = getID(row1,col1);
+                    field2ID = getID(row2,col2);
+                    for(int i = 0; i < graph.size(); i++){
+                        if(graph.get(i).getID() == field1ID){
+                            field1 = graph.get(i);
+                        } else if(graph.get(i).getID() == field2ID) {
+                            field2 = graph.get(i);
+                        }
+                    }
+
+                    if(field1 != lastField){
+                        return false;
+                    }
+                    for(int i = 0; i < field1.Neighbours.size(); i++){
+                        if(field1.Neighbours.get(i).getValue() != Board.BOARD_FIELD) {
+                            Field temp = field1.Neighbours.get(i);
+                            int dir1 = field1.getNeighbourDirection(temp.getID());
+                            int endID = temp.directions[dir1];
+                            if(endID == field2.getID()){
+                                this.nextMove = true;
+                                lastField = field2;
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+
+                }catch(NumberFormatException ex){
+                    System.out.println("wrong data");
+                    return false;
+                }
+            }
         }
     }
 

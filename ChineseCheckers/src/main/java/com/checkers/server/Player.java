@@ -155,9 +155,13 @@ public class Player {
                 myGame.sendMessage(line);
 
                 if(!myGame.isWon()){
-                  //  if(myGame.r.ifNextMovePossible()){
+                 // if(myGame.r.ifNextMovePossible()){
                     //    writeToPlayer("You have another move");
-                    //}else
+                    //}else//
+                    if(myGame.r.nextMove){
+                        writeToPlayer("You have another move ;D");
+                        return;
+                    }
                     if(isNextPlayer()) {
                         setNextPlayerActive();
                     }
@@ -233,6 +237,8 @@ public class Player {
 
     private void nextCmd(){
         if(ifActive){
+            myGame.r.nextMove = false;
+            myGame.r.lastField = null;
             setIfActive(false);
             setNextPlayerActive();
         }else{

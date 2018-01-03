@@ -21,8 +21,8 @@ public class Game {
                 .canNotEscapeTargetCorner(true)
                 .moveOnlyYourPieces(true)
                 //.stepsizeOneOnly(true)
-                .jumpOverOneOnly(true)
-                //.multiJumpsOver(true)
+                //.jumpOverOneOnly(true)
+                .multiJumpsOver(true)
                 .build();
         //create unique rules
         freeCorners = new boolean [b.getPlayers()];
