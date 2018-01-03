@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements User{
 
     private ArrayList<Game> gameList;
     private Game myGame;
