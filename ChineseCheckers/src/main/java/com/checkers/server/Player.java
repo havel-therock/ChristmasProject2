@@ -15,13 +15,11 @@ public class Player implements User{
     private int cornerNumber;
     protected BufferedReader reader;
     private PrintWriter writer;
-    private String idGame;
     private String name;
     private PlayerListener playerListener;
     protected Thread listenerThread;
 
     Player(BufferedReader reader, PrintWriter writer, ArrayList<Game> gameList){
-        idGame = null;
         ifActive = false;
         connected=true;
         number = 0;
@@ -67,8 +65,17 @@ public class Player implements User{
             case "delete":
                 deleteCmd(arguments[1]);
                 break;
+
             case "next":
                 nextCmd();
+                break;
+
+            case "addbot":
+                addBotCmd();
+                break;
+
+            case "deletebot":
+                deleteBotCmd();
                 break;
 
             default:
@@ -98,13 +105,12 @@ public class Player implements User{
                 Game game = new Game(arguments, this);
                 gameList.add(game);
                 myGame = game;
-                this.idGame = myGame.getName();
                 this.number = 0;
                 myGame.setReady(number);
                 this.cornerNumber = myGame.b.getWhichCorners(this.number);
                 writeToPlayer("Successfully created a game");
                 writeToPlayer("boardSetUp;"+myGame.b.getBoard());
-                writeToPlayer("info;"+Integer.toString(this.cornerNumber)+";"+this.name+";"+idGame);
+                writeToPlayer("info;"+Integer.toString(this.cornerNumber)+";"+this.name+";"+myGame.getName());
 
             }catch (WrongData ex){
                 writeToPlayer(ex.message);
@@ -126,12 +132,11 @@ public class Player implements User{
             if (!gameList.get(i).getIsStarted()) {
                 if (gameList.get(i).addPlayer(this)) {
                     myGame = gameList.get(i);
-                    this.idGame = myGame.getName();
                     this.number = myGame.getNextIndex();
                     this.cornerNumber = myGame.getBoard().getWhichCorners(this.number);
                     writeToPlayer("Successfully joined the game");
                     writeToPlayer("boardSetUp;" + myGame.b.getBoard());
-                    writeToPlayer("info;" + Integer.toString(this.cornerNumber) + ";" + this.name + ";" + idGame);
+                    writeToPlayer("info;" + Integer.toString(this.cornerNumber) + ";" + this.name + ";" +myGame.getName());
                     myGame.sendMessage("New player joined");
                     myGame.setReady(number);
 
@@ -194,43 +199,49 @@ public class Player implements User{
 
         this.connected=false;
         writeToPlayer("Player removed");
-        if(myGame != null){
-        myGame.delete(this);
-        myGame.setNotReady(number);
+        if(myGame != null) {
+            myGame.delete(this);
+            myGame.setNotReady(number);
 
-        if(myGame.isStarted) {
+            if(myGame.isStarted) {
 
-            myGame.deletePieces(this.cornerNumber);
+                myGame.deletePieces(this.cornerNumber);
 
-            for (User current : myGame.playerList) {
-                current.writeToPlayer("One of the players has quit!");
-                current.writeToPlayer("boardReset;" + myGame.b.getBoard());
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if(ifActive){
-                if(myGame.getCurrentPlayersNumber()==1){
-                    myGame.sendMessage("Congratulations, you won!");
-                } else if(number ==  myGame.getCurrentPlayersNumber()){
-                       myGame.setActivePlayer(0);
-                }else{
-                    myGame.setActivePlayer(number);
-                    myGame.setPlayersNumbers();
+                if(myGame.getBotsNumber()==myGame.getCurrentPlayersNumber()) {
+                    myGame.closeGame();
                 }
-            }else{
-                if(myGame.getCurrentPlayersNumber()==1){
-                    myGame.sendMessage("Congratulations, you won!");
-                }else if(number ==  myGame.getCurrentPlayersNumber()){
-                    return;
-                }else{
-                    myGame.setPlayersNumbers();
+
+                for (User current : myGame.playerList) {
+                    current.writeToPlayer("One of the players has quit!");
+                    current.writeToPlayer("boardReset;" + myGame.b.getBoard());
                 }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (ifActive) {
+                    if (myGame.getCurrentPlayersNumber() == 1) {
+                        myGame.sendMessage("Congratulations, you won!");
+                    } else if (number == myGame.getCurrentPlayersNumber()) {
+                        myGame.setActivePlayer(0);
+                    } else {
+                        myGame.setActivePlayer(number);
+                        myGame.setPlayersNumbers();
+                    }
+                } else {
+                    if (myGame.getCurrentPlayersNumber() == 1) {
+                        myGame.sendMessage("Congratulations, you won!");
+                    } else if (number == myGame.getCurrentPlayersNumber()) {
+                        return;
+                    } else {
+                        myGame.setPlayersNumbers();
+                    }
+                }
+
             }
-        }
+
         }
 
     }
@@ -285,6 +296,21 @@ public class Player implements User{
         }
     }
 
+    void addBotCmd(){
+        if(myGame.addBot()) {
+            writeToPlayer("Bot added, current bots number: "+Integer.toString((myGame.getBotsNumber())));
+        }else{
+            writeToPlayer("Bot cannot be added");
+        }
+    }
+    void deleteBotCmd(){
+        if(myGame.deleteBot()) {
+            writeToPlayer("Bot deleted, current bots number: " + Integer.toString(myGame.getBotsNumber()));
+        }else{
+            writeToPlayer("Bot cannot be deleted");
+        }
+    }
+
     public void setIfActive(boolean state){
         ifActive = state;
         if(state == true) {
@@ -311,13 +337,14 @@ public class Player implements User{
             return true;
         }
      }
+
     public  void setNumber(int i){
         this.number = i;
     }
     public int getCornerNumber(){
         return cornerNumber;
     }
-    protected int getNumber(){
+    public int getNumber(){
         return number;
     }
 }

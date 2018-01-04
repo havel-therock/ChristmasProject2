@@ -8,7 +8,6 @@ public class Game {
     Board b;
     Rules r;
     String name;
-    int ready;
     boolean isStarted;
     boolean [] freeCorners;
     ArrayList<User> playerList = new ArrayList<>();
@@ -39,7 +38,7 @@ public class Game {
         return name;
     }
 
-    protected boolean addPlayer(Player player){
+    protected boolean addPlayer(User player){
         if(playerList.size()<b.getPlayers()) {
             playerList.add(getNextIndex(),player);
             return true;
@@ -48,7 +47,7 @@ public class Game {
         }
     }
 
-    protected void delete(Player player){
+    protected void delete(User player){
         playerList.remove(player);
     }
 
@@ -144,5 +143,47 @@ public class Game {
             }
         }
         return -1;
+    }
+    protected boolean addBot(){
+        if(!isStarted) {
+                Bot newBot = new Bot(this);
+                addPlayer(newBot);
+                newBot.setBot();
+                return true;
+        }else {
+            return false;
+        }
+    }
+    protected boolean deleteBot(){
+        if(!isStarted) {
+            for (User current : playerList) {
+                if (current instanceof Bot) {
+                    setNotReady(current.getNumber());
+                    playerList.remove(current);
+                    return true;
+                }
+            }
+            return false;
+        }else{
+            return false;
+        }
+    }
+    
+    protected int getBotsNumber(){
+        int counter=0;
+        for (User current: playerList) {
+            if(current instanceof Bot){
+                counter++;
+            }
+        }
+        return counter;
+    }
+    protected void closeGame(){
+        for (User current:playerList) {
+            if(current instanceof Bot){
+                ((Bot) current).closeBot();
+            }
+        }
+        playerList.clear();
     }
 }

@@ -11,4 +11,5 @@ public interface User {
     void setNumber(int number);
 
     int getCornerNumber();
+    int getNumber();
 }

@@ -5,8 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import com.checkers.server.board.Board;
+
 
 public class BoardPanel extends JPanel {
 
@@ -35,7 +34,7 @@ public class BoardPanel extends JPanel {
         int col = 0;
         for(int i = 0; i < maxHeight; i++){
             for(int j = 0; j < maxWidth; j++){
-                if(gameBoard[i][j] != Board.NOT_PLAYABLE_FIELD){
+                if(gameBoard[i][j] != -1){
                     drawCircle(g,col,row,gameBoard[i][j]);
                     drawSelection(g,i,j,col,row);
                 }
@@ -64,7 +63,7 @@ public class BoardPanel extends JPanel {
 
     private void drawCircle(Graphics g,int col,int row,int color){
         g.setColor(selectColor(color));
-        if(color == Board.BOARD_FIELD) {
+        if(color != -1) {
             g.setColor(Color.black);
         }
         g.drawOval(col,row,edgeSize/maxWidth,edgeSize/maxWidth);
@@ -153,7 +152,7 @@ public class BoardPanel extends JPanel {
 
         for(int i = 0; i < maxHeight; i++){
             for(int j = 0; j < maxWidth; j++){
-                    if (gameBoard[i][j] != Board.NOT_PLAYABLE_FIELD) {
+                    if (gameBoard[i][j] != -1) {
                         if(y>row&&y<(row+edgeSize/maxWidth) && x>col&&x<(col+edgeSize/maxWidth)){
 
                             if(!isFirst){

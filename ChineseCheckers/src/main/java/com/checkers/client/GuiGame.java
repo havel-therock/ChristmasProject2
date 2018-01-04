@@ -14,7 +14,7 @@ import java.awt.event.WindowEvent;
 public class GuiGame extends JFrame {
 
     private JLabel playerName;
-    private JButton help,send,quit,next;
+    private JButton help,send,quit,next,addBot,deleteBot;
     private JPanel topPanel;
     private JPanel bottomPanel;
     private JTextArea textArea;
@@ -28,6 +28,7 @@ public class GuiGame extends JFrame {
         this.checkersClient = listener;
         this.setLayout(new BorderLayout(10, 10));
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
     }
 
 
@@ -46,7 +47,7 @@ public class GuiGame extends JFrame {
 
     private void resetBoard(String [] gameBoard){
         createBoard2(gameBoard);
-       board.repaint();
+        board.repaint();
     }
 
     private void createBoard2(String[] gameBoard) {
@@ -158,6 +159,8 @@ public class GuiGame extends JFrame {
         send = new JButton("Send");
         quit = new JButton("Exit");
         next = new JButton("Next");
+        addBot = new JButton("Add new bot");
+        deleteBot = new JButton("Delete bot");
         board = new BoardPanel(gameBoard);
         topPanel = new JPanel();
         playerName = new JLabel();
@@ -179,6 +182,8 @@ public class GuiGame extends JFrame {
         topPanel.add(playerName);
         topPanel.add(send);
         topPanel.add(next);
+        topPanel.add(addBot);
+        topPanel.add(deleteBot);
 
 
         add(board,BorderLayout.CENTER);
@@ -226,6 +231,19 @@ public class GuiGame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 checkersClient.sendMessage("next;");
+            }
+        });
+
+        addBot.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                checkersClient.sendMessage("addbot");
+            }
+        });
+        deleteBot.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                checkersClient.sendMessage("deletebot");
             }
         });
     }

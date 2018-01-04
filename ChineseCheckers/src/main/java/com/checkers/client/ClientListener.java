@@ -105,7 +105,9 @@ class ClientListener implements Runnable  {
                         welcomeWindow.setList(line);
                     } else if (line.matches("(won).*")) {
                         gameWindow.cmd(line);
-                    } else {
+                    } else if (line.matches("(Bot).*")) {
+                        gameWindow.writeMessage(line);
+                    }else {
                         checkersClient.showMessage(line);
                     }
                     break;
