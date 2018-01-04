@@ -303,6 +303,8 @@ public class GuiGame extends JFrame {
         help.setEnabled(false);
         send.setEnabled(false);
         next.setEnabled(false);
+        addBot.setEnabled(false);
+        deleteBot.setEnabled(false);
         board.setEnabled(false);
     }
 

@@ -127,9 +127,14 @@ public class Game {
                 current.writeToPlayer("boardReset;" + b.getBoard());
             }
 
+            if(getBotsNumber()==getCurrentPlayersNumber()) {
+                closeGame();
+            }
+
             if(playerList.size()==1){
                 sendMessage("gameover");
             }
+
             return true;
         }else{
             return false;

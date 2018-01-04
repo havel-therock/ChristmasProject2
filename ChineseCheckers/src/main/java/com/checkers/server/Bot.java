@@ -51,14 +51,12 @@ public class Bot implements User{
             System.out.println("Hey, I won");
             this.ifActive = false;
             botListener.running=false;
-            myGame.delete(this);
             this.name = "winner";
         }else if(message.equals("gameover")){
             System.out.println("Hey, I lost");
             this.ifActive = false;
             botListener.running=false;
             this.name = "loser";
-            myGame.delete(this);
         }
         return;
     }
