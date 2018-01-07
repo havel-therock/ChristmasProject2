@@ -73,7 +73,7 @@ public class Bot implements User{
 
     @Override
     public int getCornerNumber() {
-        return 0;
+        return cornerNumber;
     }
     protected boolean getIfActive(){
         return ifActive;
@@ -106,5 +106,12 @@ public class Bot implements User{
     protected void closeBot(){
         botListener.running = false;
     }
+    protected String getName(){
+        return name;
+    }
+    protected BotListener getBotListener(){
+        return botListener;
+    }
+
 
 }

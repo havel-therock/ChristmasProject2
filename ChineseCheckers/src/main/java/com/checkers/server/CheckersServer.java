@@ -26,7 +26,7 @@ class CheckersServer {
         return instance;
     }
 
-    CheckersServer(){
+    private CheckersServer(){
         createGui();
     }
 

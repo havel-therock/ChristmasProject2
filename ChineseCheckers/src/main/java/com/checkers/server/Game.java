@@ -51,8 +51,8 @@ public class Game {
         playerList.remove(player);
     }
 
-    protected void deletePieces(int number){
-        b.deletePlayer(number);
+    protected void deletePieces(int cornerNumber){
+        b.deletePlayer(cornerNumber);
     }
 
     protected void sendMessage(String message){
